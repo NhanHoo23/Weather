@@ -14,8 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import eightbitlab.com.blurview.BlurView;
-import eightbitlab.com.blurview.RenderScriptBlur;
 import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.databinding.ActivityMainBinding;
 import fpoly.nhanhhph47395.weather.fragments.HomeFragment;
@@ -25,7 +23,7 @@ import fpoly.nhanhhph47395.weather.fragments.SettingFragment;
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
-    private BlurView blurView;
+//    private BlurView blurView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -17,24 +17,30 @@
 <!--        android:layout_alignBottom="@id/nvView"-->
 <!--        android:background="@android:color/transparent" />-->
 
-    <eightbitlab.com.blurview.BlurView
-        android:id="@+id/blurView"
+<!--    <eightbitlab.com.blurview.BlurView-->
+<!--        android:id="@+id/blurView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_marginBottom="-25dp"-->
+<!--        app:blurOverlayColor="@color/colorOverlay">-->
+
+<!--        &lt;!&ndash; BottomNavigationView bên trong BlurView &ndash;&gt;-->
+<!--        -->
+<!--    </eightbitlab.com.blurview.BlurView>-->
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nvView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:menu="@menu/bottom_nav_menu"
+        android:background="@android:color/transparent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="-25dp"
-        app:blurOverlayColor="@color/colorOverlay">
-
-        <!-- BottomNavigationView bên trong BlurView -->
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/nvView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:menu="@menu/bottom_nav_menu"
-            android:background="@android:color/transparent"/>
-    </eightbitlab.com.blurview.BlurView>
+        android:layout_marginBottom="-25dp"/>
 
 
 
@@ -42,7 +48,7 @@
         android:id="@+id/flContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/blurView"
+        android:layout_above="@id/nvView"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true" />
