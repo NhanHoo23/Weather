@@ -19,8 +19,10 @@ import java.util.List;
 import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.adapter.DayForecastAdapter;
 import fpoly.nhanhhph47395.weather.adapter.HourForecastAdapter;
-import fpoly.nhanhhph47395.weather.models.Forecast;
+import fpoly.nhanhhph47395.weather.models.Forecast;;
+import fpoly.nhanhhph47395.weather.models.WeatherEvaluate;
 import fpoly.nhanhhph47395.weather.models.WeatherResponse;
+import fpoly.nhanhhph47395.weather.subviews.WindView;
 import fpoly.nhanhhph47395.weather.utils.WeatherManager;
 
 /**
@@ -29,10 +31,12 @@ import fpoly.nhanhhph47395.weather.utils.WeatherManager;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-    private TextView tvLocation, tvTemp, tvStatus, tvHighestTemp, tvLowestTemp;
+    private TextView tvLocation, tvTemp, tvStatus, tvHighestTemp, tvLowestTemp, tvPrecip, tvPrecipForecast, tvUV, tvUVWarning, tvUVAdvice, tvHumidity, tvHumidityEvaluate, tvVision, tvVisionEvaluate, tvFeelLike;
     private RecyclerView rcHourForecast, rcDayForecast;
     private HourForecastAdapter hourForecastAdapter;
     private DayForecastAdapter dayForecastAdapter;
+    private WindView windView;
+
     private WeatherManager weatherManager;
     private List<Forecast.ForecastDay.Hour> hoursList;
     private List<Forecast.ForecastDay> daysList;
@@ -59,6 +63,22 @@ public class HomeFragment extends Fragment {
         tvLowestTemp = v.findViewById(R.id.tvLowestTemp);
         rcHourForecast = v.findViewById(R.id.rcHourForecast);
         rcDayForecast = v.findViewById(R.id.rcDayForecast);
+        windView = v.findViewById(R.id.windView);
+        tvPrecip = v.findViewById(R.id.tvPrecip);
+        tvPrecipForecast = v.findViewById(R.id.tvPrecipForecast);
+        tvUV = v.findViewById(R.id.tvUV);
+        tvUVWarning = v.findViewById(R.id.tvUVWarning);
+        tvUVAdvice = v.findViewById(R.id.tvUVAdvice);
+        tvHumidity = v.findViewById(R.id.tvHumidity);
+        tvHumidityEvaluate = v.findViewById(R.id.tvHumidityEvaluate);
+        tvVision = v.findViewById(R.id.tvVision);
+        tvVisionEvaluate = v.findViewById(R.id.tvVisionEvaluate);
+        tvFeelLike = v.findViewById(R.id.tvFeelLike);
+
+//        float windSpeed = 10.8F;  // Đơn vị km/h
+//        double windDirection = 76;
+//
+//        windView.setWindDirection(windDirection, "10");// Đơn vị độ
 
         weatherManager = new WeatherManager();
         weatherManager.getWeather("Hanoi", 10, "vi", new WeatherManager.WeatherCallback() {
@@ -71,7 +91,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Throwable throwable) {
-                Log.d("Hihihi", "Không lấy được data. Lỗi: " + throwable.getLocalizedMessage());
+                Log.d("Huhuhu", "Không lấy được data. Lỗi: " + throwable.getLocalizedMessage());
             }
         });
 
@@ -94,6 +114,19 @@ public class HomeFragment extends Fragment {
         rcDayForecast.setLayoutManager(linearLayoutManager2);
         dayForecastAdapter = new DayForecastAdapter(getContext(), daysList);
         rcDayForecast.setAdapter(dayForecastAdapter);
+
+        tvPrecip.setText(String.valueOf((int)weatherResponse.current.precip_mm) + " mm");
+        tvPrecipForecast.setText("Dự báo: " + (int)weatherResponse.forecast.forecastday.get(1).day.totalprecip_mm + "mm trong 24h tiếp theo" );
+        tvUV.setText(String.valueOf(weatherResponse.current.uv));
+        WeatherEvaluate.UVLevel uvLevel = WeatherEvaluate.UVLevel.getUVLevel(weatherResponse.current.uv);
+        tvUVWarning.setText(uvLevel.getDisplayName());
+        tvUVAdvice.setText(uvLevel.getDetailedDescription());
+        tvHumidity.setText(String.valueOf(weatherResponse.current.humidity)+"%");
+        tvHumidityEvaluate.setText("Điểm sương là " + (int)weatherResponse.current.dewpoint_c + "° ngay lúc này");
+        tvVision.setText(String.valueOf(weatherResponse.current.vis_km + " km"));
+        WeatherEvaluate.VisibilityLevel visibilityLevel = WeatherEvaluate.VisibilityLevel.getVisibilityLevel(weatherResponse.current.vis_km);
+        tvVisionEvaluate.setText(visibilityLevel.getDisplayName());
+        tvFeelLike.setText(String.valueOf((int)weatherResponse.current.feelslike_c) + "°");
     }
 
     private List<Forecast.ForecastDay.Hour> get24HourForecast(WeatherResponse weatherResponse) {

@@ -16,6 +16,7 @@ public class Forecast {
             public double maxtemp_f;
             public double mintemp_f;
             public int avghumidity;
+            public double totalprecip_mm;
             public Current.Condition condition;
         }
 
