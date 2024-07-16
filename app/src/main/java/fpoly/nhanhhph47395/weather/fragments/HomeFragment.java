@@ -78,8 +78,7 @@ public class HomeFragment extends Fragment {
 //        float windSpeed = 10.8F;  // Đơn vị km/h
 //        double windDirection = 76;
 //
-//        windView.setWindDirection(windDirection, "10");// Đơn vị độ
-
+//
         weatherManager = new WeatherManager();
         weatherManager.getWeather("Hanoi", 10, "vi", new WeatherManager.WeatherCallback() {
             @Override
@@ -114,6 +113,8 @@ public class HomeFragment extends Fragment {
         rcDayForecast.setLayoutManager(linearLayoutManager2);
         dayForecastAdapter = new DayForecastAdapter(getContext(), daysList);
         rcDayForecast.setAdapter(dayForecastAdapter);
+
+        windView.setWindDirection(weatherResponse.current.wind_degree, "10");
 
         tvPrecip.setText(String.valueOf((int)weatherResponse.current.precip_mm) + " mm");
         tvPrecipForecast.setText("Dự báo: " + (int)weatherResponse.forecast.forecastday.get(1).day.totalprecip_mm + "mm trong 24h tiếp theo" );

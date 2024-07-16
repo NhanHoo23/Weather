@@ -13,6 +13,10 @@ public class Current {
     public double feelslike_f;
     public double dewpoint_c;
     public double dewpoint_f;
+    public int wind_degree;
+    public String wind_dir;
+    public double wind_kph;
+    public double wind_mph;
 
     public class Condition {
         public String text;

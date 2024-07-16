@@ -114,8 +114,7 @@ public class WindView extends View {
     }
 
     public void setWindDirection(double degrees, String windSpeed) {
-        mDegrees = 90;
-        rotationMatrix.setRotate((float) mDegrees, getWidth() / 2f, getHeight() / 2f);
+        mDegrees = degrees;
         invalidate();
     }
 
@@ -130,16 +129,12 @@ public class WindView extends View {
 
         float radius = Math.min(xCenter, yCenter) - (2 * STROKE_WIDTH);
 
-//        int arrowSize = (int) (radius * .1);
-//        int yLineStart = yCenter - radius + 2 * STROKE_WIDTH;
-//        int yLineEnd = yCenter + radius - 2 * STROKE_WIDTH;
-
         // Vẽ vòng tròn đứt nét
         canvas.drawCircle(xCenter, yCenter, radius, circlePaint);
 
         // Vẽ các chữ cái chỉ hướng gió bên trong vòng tròn và vạch trắng tại mỗi chữ
         for (int i = 0; i < CARDINAL_DIRECTIONS.length; i++) {
-            double angle = Math.toRadians(i * 90); // 0, 90, 180, 270 độ cho N, E, S, W
+            double angle = Math.toRadians(i * 90); // 0, 90, 180, 270 độ cho D, N, T, B
             float x = xCenter + (float) (Math.cos(angle) * (radius * 0.75)); // Điều chỉnh vị trí chữ cái vào trong vòng tròn
             float y = yCenter + (float) (Math.sin(angle) * (radius * 0.75)) + (textPaint.getTextSize() / 2);
             canvas.drawText(CARDINAL_DIRECTIONS[i], x, y, textPaint);
@@ -153,16 +148,33 @@ public class WindView extends View {
             canvas.drawLine(xMarkerStart, yMarkerStart, xMarkerEnd, yMarkerEnd, markerPaint);
         }
 
-        //Vẽ đường mũi tên nét đứt
+        // Thiết lập Matrix để xoay linePaint và arrowPaint
+        Matrix matrix = new Matrix();
+        matrix.setRotate((float) mDegrees, xCenter, yCenter);
+
+        // Lưu lại trạng thái hiện tại của Canvas
+        canvas.save();
+
+        // Áp dụng Matrix vào linePaint và arrowPaint
+        canvas.setMatrix(matrix);
+
+        // Vẽ đường mũi tên nét đứt
         canvas.drawLine(xCenter, yCenter + radius + STROKE_WIDTH - 14, xCenter, yCenter - radius + 14, linePaint);
 
         // Vẽ mũi tên
         arrowPath.reset();
-        arrowPath.moveTo(xCenter, yCenter - (radius+STROKE_WIDTH) + 14);
+        arrowPath.moveTo(xCenter, yCenter - (radius + STROKE_WIDTH) + 14);
         arrowPath.lineTo(xCenter - 15, yCenter - radius + 20);
         arrowPath.lineTo(xCenter + 15, yCenter - radius + 20);
         arrowPath.close();
         canvas.drawPath(arrowPath, arrowPaint);
+
+        // Khôi phục lại trạng thái của Canvas
+        canvas.restore();
+
+    }
+}
+
 
 //
 //        // Vẽ chữ tốc độ gió ở trung tâm
@@ -175,5 +187,3 @@ public class WindView extends View {
 //        canvas.concat(rotationMatrix); // Áp dụng ma trận xoay
 //        canvas.drawPath(arrowPath, arrowPaint); // Vẽ mũi tên
 //        canvas.restore();
-    }
-}
