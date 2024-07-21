@@ -48,4 +48,5 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.glide)
     annotationProcessor(libs.glide.compiler)
+    implementation(libs.play.services.location)
 }

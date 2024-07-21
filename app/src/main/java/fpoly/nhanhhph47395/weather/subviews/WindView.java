@@ -10,25 +10,27 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
-import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
 public class WindView extends View {
 
     private final int STROKE_WIDTH = 20;
-    private final int ARROW_WIDTH = 8;
     private Paint circlePaint;
     private Paint markerPaint;
     private Paint arrowPaint;
     private Path arrowPath;
     private Paint linePaint;
-    private Paint textPaint;
+    private Paint directionPaint;
+//    private Paint windPaint;
+//    StaticLayout staticLayout;
 
     private double mDegrees;
     private float radius, dashLength;
-    private Matrix rotationMatrix; // Ma trận để xoay mũi tên
 
     private final String[] CARDINAL_DIRECTIONS = {"Đ", "N", "T", "B"};
 
@@ -71,21 +73,25 @@ public class WindView extends View {
         markerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         markerPaint.setColor(Color.parseColor("#DAECF4"));
         markerPaint.setStyle(Paint.Style.STROKE);
-        markerPaint.setStrokeWidth(STROKE_WIDTH / 4);
+        markerPaint.setStrokeWidth(STROKE_WIDTH / 2);
 
-        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.parseColor("#DAECF4"));
-        textPaint.setTextSize(38);
-        textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        textPaint.setTextAlign(Paint.Align.CENTER);
+        directionPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        directionPaint.setColor(Color.parseColor("#DAECF4"));
+        directionPaint.setTextSize(50);
+        directionPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        directionPaint.setTextAlign(Paint.Align.CENTER);
 
-        rotationMatrix = new Matrix(); // Khởi tạo ma trận xoay
+//        windPaint.setColor(Color.BLACK);
+//        windPaint.setTextSize(40);
+//        windPaint.setTextAlign(Paint.Align.CENTER);
+//        String windSpeed = "10 km/h";
+//        staticLayout = new StaticLayout(windSpeed, (TextPaint) windPaint, (int) (2 * radius), Layout.Alignment.ALIGN_CENTER, 1.0f, 0, false);
 
         linePaint = new Paint();
         linePaint.setColor(Color.WHITE);
         linePaint.setStyle(Paint.Style.STROKE);
         linePaint.setStrokeCap(ROUND);
-        linePaint.setStrokeWidth(10);
+        linePaint.setStrokeWidth(STROKE_WIDTH);
         linePaint.setAntiAlias(true);
 
         arrowPaint = new Paint();
@@ -136,8 +142,8 @@ public class WindView extends View {
         for (int i = 0; i < CARDINAL_DIRECTIONS.length; i++) {
             double angle = Math.toRadians(i * 90); // 0, 90, 180, 270 độ cho D, N, T, B
             float x = xCenter + (float) (Math.cos(angle) * (radius * 0.75)); // Điều chỉnh vị trí chữ cái vào trong vòng tròn
-            float y = yCenter + (float) (Math.sin(angle) * (radius * 0.75)) + (textPaint.getTextSize() / 2);
-            canvas.drawText(CARDINAL_DIRECTIONS[i], x, y, textPaint);
+            float y = yCenter + (float) (Math.sin(angle) * (radius * 0.75)) + (directionPaint.getTextSize() / 2);
+            canvas.drawText(CARDINAL_DIRECTIONS[i], x, y, directionPaint);
 
             // Vẽ vạch trắng
             float xMarkerStart = xCenter + (float) (Math.cos(angle) * (radius - STROKE_WIDTH / 2));
@@ -147,6 +153,16 @@ public class WindView extends View {
 
             canvas.drawLine(xMarkerStart, yMarkerStart, xMarkerEnd, yMarkerEnd, markerPaint);
         }
+
+        // Vẽ text hiển thị tốc độ gió
+         // Thay đổi tốc độ gió theo dữ liệu thực tế
+
+        // Tạo một StaticLayout để xử lý text đa dòng
+
+//        float textY = yCenter - staticLayout.getHeight() / 2;
+//        canvas.translate(xCenter, textY); // Di chuyển đến vị trí giữa của vòng tròn
+//        staticLayout.draw(canvas);
+//        canvas.restore();
 
         // Thiết lập Matrix để xoay linePaint và arrowPaint
         Matrix matrix = new Matrix();
@@ -164,8 +180,8 @@ public class WindView extends View {
         // Vẽ mũi tên
         arrowPath.reset();
         arrowPath.moveTo(xCenter, yCenter - (radius + STROKE_WIDTH) + 14);
-        arrowPath.lineTo(xCenter - 15, yCenter - radius + 20);
-        arrowPath.lineTo(xCenter + 15, yCenter - radius + 20);
+        arrowPath.lineTo(xCenter - 20, yCenter - radius + 20);
+        arrowPath.lineTo(xCenter + 20, yCenter - radius + 20);
         arrowPath.close();
         canvas.drawPath(arrowPath, arrowPaint);
 
@@ -181,9 +197,3 @@ public class WindView extends View {
 //        if (windSpeed != null) {
 //            canvas.drawText(windSpeed, xCenter, yCenter + (textPaint.getTextSize() / 3), textPaint);
 //        }
-//
-//        canvas.save(); // Lưu trạng thái của canvas
-//        canvas.translate(xCenter, yCenter); // Di chuyển canvas đến tâm vòng tròn
-//        canvas.concat(rotationMatrix); // Áp dụng ma trận xoay
-//        canvas.drawPath(arrowPath, arrowPaint); // Vẽ mũi tên
-//        canvas.restore();

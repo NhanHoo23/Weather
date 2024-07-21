@@ -23,6 +23,7 @@ import fpoly.nhanhhph47395.weather.models.Forecast;;
 import fpoly.nhanhhph47395.weather.models.WeatherEvaluate;
 import fpoly.nhanhhph47395.weather.models.WeatherResponse;
 import fpoly.nhanhhph47395.weather.subviews.WindView;
+import fpoly.nhanhhph47395.weather.utils.AppManager;
 import fpoly.nhanhhph47395.weather.utils.WeatherManager;
 
 /**
@@ -41,9 +42,7 @@ public class HomeFragment extends Fragment {
     private List<Forecast.ForecastDay.Hour> hoursList;
     private List<Forecast.ForecastDay> daysList;
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
+    public HomeFragment() {}
 
     public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
@@ -75,12 +74,8 @@ public class HomeFragment extends Fragment {
         tvVisionEvaluate = v.findViewById(R.id.tvVisionEvaluate);
         tvFeelLike = v.findViewById(R.id.tvFeelLike);
 
-//        float windSpeed = 10.8F;  // Đơn vị km/h
-//        double windDirection = 76;
-//
-//
         weatherManager = new WeatherManager();
-        weatherManager.getWeather("Hanoi", 10, "vi", new WeatherManager.WeatherCallback() {
+        weatherManager.getWeatherByLongAndLat(String.valueOf(AppManager.shared(getContext()).defaultLatitude()), String.valueOf(AppManager.shared(getContext()).defaultLongitude()), 10, "vi", new WeatherManager.WeatherCallback() {
             @Override
             public void onSuccess(WeatherResponse weatherResponse) {
                 hoursList = get24HourForecast(weatherResponse);

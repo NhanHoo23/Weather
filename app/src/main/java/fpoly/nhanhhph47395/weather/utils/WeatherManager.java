@@ -15,8 +15,27 @@ public class WeatherManager {
         apiService = retrofit.create(WeatherAPIService.class);
     }
 
-    public void getWeather(String location, int days, String language, final WeatherCallback callback) {
-        Call<WeatherResponse> call = apiService.getWeather(API_KEY, location, days, language);
+    public void getWeatherBySpecificLocation(String location, int days, String language, final WeatherCallback callback) {
+        Call<WeatherResponse> call = apiService.getWeatherBySpecificLocation(API_KEY, location, days, language);
+        call.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onFailure(new Throwable("Response not successful"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                callback.onFailure(t);
+            }
+        });
+    }
+
+    public void getWeatherByLongAndLat(String latitude, String longitude, int days, String language, final WeatherCallback callback) {
+        Call<WeatherResponse> call = apiService.getWeatherByLongAndLat(API_KEY, latitude + "," + longitude, days, language);
         call.enqueue(new Callback<WeatherResponse>() {
             @Override
             public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {

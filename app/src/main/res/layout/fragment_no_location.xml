@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.NoLocationFragment"
+    android:background="@color/mainBackgroundColor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/img_map"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/img_map_light"
+                android:layout_marginTop="32dp"/>
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/img_location_map"
+                android:layout_centerHorizontal="true"
+                android:layout_alignBottom="@+id/img_map"
+                android:layout_marginBottom="82dp"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chưa có thêm thành phố nào"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="22dp"
+            android:textAlignment="center"
+            android:textColor="@color/mainTextColor"
+            android:layout_marginTop="12dp"/>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/btnCurrentLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginTop="32dp"
+            app:icon="@drawable/ic_current_location"
+            app:iconGravity="textStart"
+            android:text="Chọn vị trí hiện tại"
+            android:textColor="#65558F"/>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/btnSearchLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginTop="16dp"
+            app:icon="@drawable/ic_location"
+            app:iconGravity="textStart"
+            android:text="Tìm kiếm địa điểm"
+            android:textColor="#65558F"/>
+
+
+    </LinearLayout>
+</FrameLayout>

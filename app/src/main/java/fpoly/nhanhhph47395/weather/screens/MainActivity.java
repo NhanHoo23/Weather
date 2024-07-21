@@ -17,8 +17,10 @@ import androidx.fragment.app.FragmentTransaction;
 import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.databinding.ActivityMainBinding;
 import fpoly.nhanhhph47395.weather.fragments.HomeFragment;
+import fpoly.nhanhhph47395.weather.fragments.NoLocationFragment;
 import fpoly.nhanhhph47395.weather.fragments.SearchFragment;
 import fpoly.nhanhhph47395.weather.fragments.SettingFragment;
+import fpoly.nhanhhph47395.weather.utils.AppManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,11 +33,19 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        replaceFragment(new HomeFragment());
+        if (AppManager.shared(this).isLocationEnabled()) {
+            replaceFragment(new HomeFragment());
+        } else {
+            replaceFragment(new NoLocationFragment());
+        }
 
         binding.nvView.setOnItemSelectedListener(menuItem -> {
             if (menuItem.getItemId() == R.id.nav_home) {
-                replaceFragment(new HomeFragment());
+                if (AppManager.shared(this).isLocationEnabled()) {
+                    replaceFragment(new HomeFragment());
+                } else {
+                    replaceFragment(new NoLocationFragment());
+                }
             } else if (menuItem.getItemId() == R.id.nav_search) {
                 replaceFragment(new SearchFragment());
             } else {
