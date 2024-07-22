@@ -42,6 +42,7 @@ public class SplashActivity extends AppCompatActivity {
             if (!AppManager.shared(this).isFirstLogin()) {
                 showNotificationPrompt();
             } else {
+                getLastKnownLocation();
                 goToMainActivity();
             }
         }, 3000);

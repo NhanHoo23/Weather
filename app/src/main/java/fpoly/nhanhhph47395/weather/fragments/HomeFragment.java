@@ -2,6 +2,7 @@ package fpoly.nhanhhph47395.weather.fragments;
 
 import android.os.Bundle;
 
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ import fpoly.nhanhhph47395.weather.utils.WeatherManager;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+    private NestedScrollView nestedScrollView;
+    private ProgressBar progressBar;
     private TextView tvLocation, tvTemp, tvStatus, tvHighestTemp, tvLowestTemp, tvPrecip, tvPrecipForecast, tvUV, tvUVWarning, tvUVAdvice, tvHumidity, tvHumidityEvaluate, tvVision, tvVisionEvaluate, tvFeelLike;
     private RecyclerView rcHourForecast, rcDayForecast;
     private HourForecastAdapter hourForecastAdapter;
@@ -55,6 +59,8 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
+        nestedScrollView = v.findViewById(R.id.nestedScrollView);
+        progressBar = v.findViewById(R.id.progressBar);
         tvLocation = v.findViewById(R.id.tvLocation);
         tvTemp = v.findViewById(R.id.tvTemp);
         tvStatus = v.findViewById(R.id.tvStatus);
@@ -74,6 +80,9 @@ public class HomeFragment extends Fragment {
         tvVisionEvaluate = v.findViewById(R.id.tvVisionEvaluate);
         tvFeelLike = v.findViewById(R.id.tvFeelLike);
 
+        progressBar.setVisibility(View.VISIBLE);
+        nestedScrollView.setVisibility(View.GONE);
+
         weatherManager = new WeatherManager();
         weatherManager.getWeatherByLongAndLat(String.valueOf(AppManager.shared(getContext()).defaultLatitude()), String.valueOf(AppManager.shared(getContext()).defaultLongitude()), 10, "vi", new WeatherManager.WeatherCallback() {
             @Override
@@ -85,6 +94,8 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Throwable throwable) {
+                //In ra thông báo lỗi data hoặc ko có mạng
+                progressBar.setVisibility(View.GONE);
                 Log.d("Huhuhu", "Không lấy được data. Lỗi: " + throwable.getLocalizedMessage());
             }
         });
@@ -93,6 +104,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateUI(WeatherResponse weatherResponse) {
+        progressBar.setVisibility(View.GONE);
+        nestedScrollView.setVisibility(View.VISIBLE);
+
         tvLocation.setText(weatherResponse.location.name);
         tvTemp.setText(String.valueOf((int) weatherResponse.current.temp_c) + "°");
         tvStatus.setText(weatherResponse.current.condition.text);
