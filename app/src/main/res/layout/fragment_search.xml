@@ -24,7 +24,22 @@
             android:hint="Tìm kiếm thành phố"
             app:layout_anchor="@id/searchBar">
 
-            <!-- Search suggestions/results go here (ScrollView, RecyclerView, etc.). -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+            <fpoly.nhanhhph47395.weather.subviews.NoResultsView
+                android:id="@+id/noResultsView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcSearch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
         </com.google.android.material.search.SearchView>
 

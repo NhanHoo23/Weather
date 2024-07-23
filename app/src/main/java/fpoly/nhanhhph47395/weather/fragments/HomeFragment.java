@@ -123,7 +123,7 @@ public class HomeFragment extends Fragment {
         dayForecastAdapter = new DayForecastAdapter(getContext(), daysList);
         rcDayForecast.setAdapter(dayForecastAdapter);
 
-        windView.setWindDirection(weatherResponse.current.wind_degree, "10");
+        windView.setWindDirection(weatherResponse.current.wind_degree, String.valueOf((int) weatherResponse.current.wind_kph), "km/h");
 
         tvPrecip.setText(String.valueOf((int)weatherResponse.current.precip_mm) + " mm");
         tvPrecipForecast.setText("Dự báo: " + (int)weatherResponse.forecast.forecastday.get(1).day.totalprecip_mm + "mm trong 24h tiếp theo" );

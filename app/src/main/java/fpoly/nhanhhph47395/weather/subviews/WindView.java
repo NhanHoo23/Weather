@@ -16,6 +16,7 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.LinearLayout;
 
 public class WindView extends View {
 
@@ -26,10 +27,11 @@ public class WindView extends View {
     private Path arrowPath;
     private Paint linePaint;
     private Paint directionPaint;
-//    private Paint windPaint;
-//    StaticLayout staticLayout;
+    private Paint textPaint;
 
     private double mDegrees;
+    private String windSpeed = "18";
+    private String windUnit = "km/h";
     private float radius, dashLength;
 
     private final String[] CARDINAL_DIRECTIONS = {"Đ", "N", "T", "B"};
@@ -59,7 +61,7 @@ public class WindView extends View {
         float realRadius = (radius+STROKE_WIDTH-28.0f)*2.0f;
         dashLength = realRadius / 5;
 
-        PathEffect dashEffect = new DashPathEffect(new float[]{dashLength * 1.5f, dashLength * 2}, 0);
+        PathEffect dashEffect = new DashPathEffect(new float[]{dashLength * 1, dashLength * 3}, 0);
         linePaint.setPathEffect(dashEffect);
     }
 
@@ -81,12 +83,6 @@ public class WindView extends View {
         directionPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         directionPaint.setTextAlign(Paint.Align.CENTER);
 
-//        windPaint.setColor(Color.BLACK);
-//        windPaint.setTextSize(40);
-//        windPaint.setTextAlign(Paint.Align.CENTER);
-//        String windSpeed = "10 km/h";
-//        staticLayout = new StaticLayout(windSpeed, (TextPaint) windPaint, (int) (2 * radius), Layout.Alignment.ALIGN_CENTER, 1.0f, 0, false);
-
         linePaint = new Paint();
         linePaint.setColor(Color.WHITE);
         linePaint.setStyle(Paint.Style.STROKE);
@@ -100,6 +96,13 @@ public class WindView extends View {
         arrowPaint.setAntiAlias(true);
 
         arrowPath = new Path();
+
+        // Khởi tạo Paint cho văn bản
+        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setColor(Color.WHITE);
+        textPaint.setTextSize(50);
+        textPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD));
+        textPaint.setTextAlign(Paint.Align.CENTER);
     }
 
     private Path createArrowPath() {
@@ -119,8 +122,10 @@ public class WindView extends View {
         return path;
     }
 
-    public void setWindDirection(double degrees, String windSpeed) {
+    public void setWindDirection(double degrees, String windSpeed, String windUnit) {
         mDegrees = degrees;
+        this.windSpeed = windSpeed;
+        this.windUnit = windUnit;
         invalidate();
     }
 
@@ -154,15 +159,14 @@ public class WindView extends View {
             canvas.drawLine(xMarkerStart, yMarkerStart, xMarkerEnd, yMarkerEnd, markerPaint);
         }
 
-        // Vẽ text hiển thị tốc độ gió
-         // Thay đổi tốc độ gió theo dữ liệu thực tế
+        // Vẽ số tốc độ gió
+        canvas.drawText(windSpeed, xCenter, yCenter, textPaint);
 
-        // Tạo một StaticLayout để xử lý text đa dòng
+        // Vẽ đơn vị tốc độ gió
+        textPaint.setTextSize(35);
+        textPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+        canvas.drawText(windUnit, xCenter, yCenter + textPaint.getTextSize(), textPaint);
 
-//        float textY = yCenter - staticLayout.getHeight() / 2;
-//        canvas.translate(xCenter, textY); // Di chuyển đến vị trí giữa của vòng tròn
-//        staticLayout.draw(canvas);
-//        canvas.restore();
 
         // Thiết lập Matrix để xoay linePaint và arrowPaint
         Matrix matrix = new Matrix();
@@ -191,9 +195,3 @@ public class WindView extends View {
     }
 }
 
-
-//
-//        // Vẽ chữ tốc độ gió ở trung tâm
-//        if (windSpeed != null) {
-//            canvas.drawText(windSpeed, xCenter, yCenter + (textPaint.getTextSize() / 3), textPaint);
-//        }
