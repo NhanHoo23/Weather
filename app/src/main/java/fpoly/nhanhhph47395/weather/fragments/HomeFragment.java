@@ -42,7 +42,6 @@ public class HomeFragment extends Fragment {
     private DayForecastAdapter dayForecastAdapter;
     private WindView windView;
 
-    private WeatherManager weatherManager;
     private List<Forecast.ForecastDay.Hour> hoursList;
     private List<Forecast.ForecastDay> daysList;
 
@@ -83,8 +82,7 @@ public class HomeFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
         nestedScrollView.setVisibility(View.GONE);
 
-        weatherManager = new WeatherManager();
-        weatherManager.getWeatherByLongAndLat(String.valueOf(AppManager.shared(getContext()).defaultLatitude()), String.valueOf(AppManager.shared(getContext()).defaultLongitude()), 10, "vi", new WeatherManager.WeatherCallback() {
+        WeatherManager.shared().getWeatherBySpecificLocation(AppManager.shared(getContext()).loadLocationList().get(0), 10, "vi", new WeatherManager.WeatherCallback() {
             @Override
             public void onSuccess(WeatherResponse weatherResponse) {
                 hoursList = get24HourForecast(weatherResponse);

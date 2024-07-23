@@ -1,7 +1,9 @@
 package fpoly.nhanhhph47395.weather.utils;
 
 import android.content.Context;
+import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fpoly.nhanhhph47395.weather.models.Location;
@@ -15,10 +17,13 @@ public class WeatherManager {
     private static WeatherManager instance;
     private WeatherAPIService apiService;
     private static final String API_KEY = "dc7e6eea1ece4db598e92310241407";
+    private List<WeatherResponse> locationList;
+
 
     public WeatherManager() {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         apiService = retrofit.create(WeatherAPIService.class);
+        locationList = new ArrayList<>();
     }
 
     public static synchronized WeatherManager shared() {
@@ -28,27 +33,12 @@ public class WeatherManager {
         return instance;
     }
 
-    public void getWeatherBySpecificLocation(String location, int days, String language, final WeatherCallback callback) {
-        Call<WeatherResponse> call = apiService.getWeatherBySpecificLocation(API_KEY, location, days, language);
-        call.enqueue(new Callback<WeatherResponse>() {
-            @Override
-            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    callback.onSuccess(response.body());
-                } else {
-                    callback.onFailure(new Throwable("Response not successful"));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<WeatherResponse> call, Throwable t) {
-                callback.onFailure(t);
-            }
-        });
+    public List<WeatherResponse> getLocationList() {
+        return locationList;
     }
 
-    public void getWeatherByLongAndLat(String latitude, String longitude, int days, String language, final WeatherCallback callback) {
-        Call<WeatherResponse> call = apiService.getWeatherByLongAndLat(API_KEY, latitude + "," + longitude, days, language);
+    public void getWeatherBySpecificLocation(String location, int days, String language, final WeatherCallback callback) {
+        Call<WeatherResponse> call = apiService.getWeatherBySpecificLocation(API_KEY, location, days, language);
         call.enqueue(new Callback<WeatherResponse>() {
             @Override
             public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
@@ -83,6 +73,24 @@ public class WeatherManager {
                 callback.onFailure(t);
             }
         });
+    }
+
+    public void fetchAndStoreWeatherData(Context context) {
+        List<String> locationListString = AppManager.shared(context).loadLocationList();
+
+        for (String location : locationListString) {
+            getWeatherBySpecificLocation(location, 10, "vi", new WeatherCallback() {
+                @Override
+                public void onSuccess(WeatherResponse weatherResponse) {
+                    locationList.add(weatherResponse);
+                }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    Log.d("onFailure", "onFailure: " + location + "-" +throwable.getLocalizedMessage());
+                }
+            });
+        }
     }
 
     public interface WeatherCallback {

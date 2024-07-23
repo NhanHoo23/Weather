@@ -3,6 +3,12 @@ package fpoly.nhanhhph47395.weather.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
+
 public class AppManager {
     private static final String PREFS_NAME = "app_prefs";
     private static final String KEY_LOCATION_ENABLED = "location_enabled";
@@ -73,6 +79,18 @@ public class AppManager {
 
     public float defaultLatitude() {
         return sharedPreferences.getFloat("defaultLatitude", 0);
+    }
+
+    public void saveLocationList(List<String> locationList) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("locationList", new Gson().toJson(locationList));
+        editor.apply();
+    }
+
+    public List<String> loadLocationList() {
+        String json = sharedPreferences.getString("locationList", "[]");
+        Type type = new TypeToken<List<String>>() {}.getType();
+        return new Gson().fromJson(json, type);
     }
 }
 

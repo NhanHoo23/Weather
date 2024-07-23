@@ -50,9 +50,6 @@ public class HourForecastAdapter extends RecyclerView.Adapter<HourForecastAdapte
             Date date = inputFormat.parse(hour.time);
             String formattedTime = outputFormat.format(date);
 
-            Calendar calendar = Calendar.getInstance();
-//            int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-
             holder.tvHour.setText(formattedTime);
             Glide.with(mContext)
                     .load("https:" + hour.condition.icon) // Add "https:" if the URL is relative

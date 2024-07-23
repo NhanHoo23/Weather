@@ -22,8 +22,12 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.utils.AppManager;
+import fpoly.nhanhhph47395.weather.utils.WeatherManager;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -139,6 +143,18 @@ public class SplashActivity extends AppCompatActivity {
                             AppManager.shared(SplashActivity.this).setDefaultLatitude((float) location.getLatitude());
                             Log.d("Long", "onSuccess: " + location.getLongitude());
                             Log.d("Lat", "onSuccess: " + location.getLatitude());
+
+                            List<String> locationList = AppManager.shared(SplashActivity.this).loadLocationList();
+                            String latAndLong = location.getLatitude()+","+location.getLongitude();
+                            if (locationList.isEmpty()) {
+                                locationList.add(latAndLong);
+                            } else {
+                                locationList.set(0, latAndLong);
+                            }
+                            AppManager.shared(SplashActivity.this).saveLocationList(locationList);
+
+                            //Lưu mảng location cho searchFragment
+                            WeatherManager.shared().fetchAndStoreWeatherData(SplashActivity.this);
                         }
                     }
                 });

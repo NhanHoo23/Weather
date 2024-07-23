@@ -31,7 +31,6 @@ import fpoly.nhanhhph47395.weather.models.Location;
 
 
 public class SearchTextAdapter extends RecyclerView.Adapter<SearchTextAdapter.SearchTextViewHolder> {
-
     private Context mContext;
     private List<Location> list;
 
