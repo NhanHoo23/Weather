@@ -1,22 +1,22 @@
 package fpoly.nhanhhph47395.weather.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.ContextMenu;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.PopupMenu;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,7 +27,7 @@ import java.util.List;
 import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.adapter.DayForecastAdapter;
 import fpoly.nhanhhph47395.weather.adapter.HourForecastAdapter;
-import fpoly.nhanhhph47395.weather.models.Forecast;;
+import fpoly.nhanhhph47395.weather.models.Forecast;
 import fpoly.nhanhhph47395.weather.models.Location;
 import fpoly.nhanhhph47395.weather.models.WeatherEvaluate;
 import fpoly.nhanhhph47395.weather.models.WeatherResponse;
@@ -35,15 +35,12 @@ import fpoly.nhanhhph47395.weather.subviews.WindView;
 import fpoly.nhanhhph47395.weather.utils.AppManager;
 import fpoly.nhanhhph47395.weather.utils.WeatherManager;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class HomeFragment extends Fragment {
+public class LocationForecastFragment extends BottomSheetDialogFragment {
+    private Location selectedLocation;
     private NestedScrollView nestedScrollView;
     private ProgressBar progressBar;
-    private TextView tvMenu, tvLocation, tvTemp, tvStatus, tvHighestTemp, tvLowestTemp, tvPrecip, tvPrecipForecast, tvUV, tvUVWarning, tvUVAdvice, tvHumidity, tvHumidityEvaluate, tvVision, tvVisionEvaluate, tvFeelLike;
+    private RelativeLayout header;
+    private TextView tvMenu, tvCancel, tvAdd, tvLocation, tvTemp, tvStatus, tvHighestTemp, tvLowestTemp, tvPrecip, tvPrecipForecast, tvUV, tvUVWarning, tvUVAdvice, tvHumidity, tvHumidityEvaluate, tvVision, tvVisionEvaluate, tvFeelLike;
     private RecyclerView rcHourForecast, rcDayForecast;
     private HourForecastAdapter hourForecastAdapter;
     private DayForecastAdapter dayForecastAdapter;
@@ -51,30 +48,39 @@ public class HomeFragment extends Fragment {
 
     private List<Forecast.ForecastDay.Hour> hoursList;
     private List<Forecast.ForecastDay> daysList;
+    private WeatherResponse weatherResponseLocation;
 
-    public HomeFragment() {}
+    private LocationForecastFragmentListener listener;
 
-    public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
+    public LocationForecastFragment(Location selectedLocation, LocationForecastFragmentListener listener) {
+        this.selectedLocation = selectedLocation;
+        this.listener = listener;
+    }
+
+    public static LocationForecastFragment newInstance(Location location, LocationForecastFragmentListener listener) {
+        LocationForecastFragment fragment = new LocationForecastFragment(location, listener);
 
         return fragment;
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_home, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        setupView(v);
+        setupView(view);
 
-        callAPI(null);
+        callAPI();
 
-        return v;
+        return view;
     }
 
     private void setupView(View v) {
+        v.setBackgroundResource(R.drawable.rounded_corner);
         tvMenu = v.findViewById(R.id.dropdown_menu);
+        header = v.findViewById(R.id.header);
+        tvCancel = v.findViewById(R.id.tvCancel);
+        tvAdd = v.findViewById(R.id.tvAdd);
         nestedScrollView = v.findViewById(R.id.nestedScrollView);
         progressBar = v.findViewById(R.id.progressBar);
         tvLocation = v.findViewById(R.id.tvLocation);
@@ -96,51 +102,26 @@ public class HomeFragment extends Fragment {
         tvVisionEvaluate = v.findViewById(R.id.tvVisionEvaluate);
         tvFeelLike = v.findViewById(R.id.tvFeelLike);
 
-        tvMenu.setVisibility(View.VISIBLE);
-        tvLocation.setVisibility(View.GONE);
+        tvMenu.setVisibility(View.INVISIBLE);
+        tvLocation.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-        nestedScrollView.setVisibility(View.GONE);
+        nestedScrollView.setVisibility(View.INVISIBLE);
+        header.setVisibility(View.VISIBLE);
 
-        tvMenu.setOnClickListener(v1 -> {
-            showPopupMenu(tvMenu);
+        tvCancel.setOnClickListener(v1 -> {dismiss();});
+        tvAdd.setOnClickListener(v1 -> {
+            addLocation();
         });
     }
 
-    private void showPopupMenu(View view) {
-        PopupMenu popupMenu = new PopupMenu(getContext(), view);
-
-        List<WeatherResponse> arr = WeatherManager.shared().getLocationList();
-        for (int i = 0; i < arr.size(); i++) {
-            if(i == 0) {
-                popupMenu.getMenu().add(0, i, i, "Vị trí của tôi");
-            } else {
-                popupMenu.getMenu().add(0, i, i, arr.get(i).location.name);
-            }
-
-        }
-
-        popupMenu.setOnMenuItemClickListener(menuItem -> {
-            int index = menuItem.getItemId();
-            callAPI(index);
-
-            return true;
-        });
-
-        popupMenu.show();
-    }
-
-    private void callAPI(Integer index) {
-        if (index == null) {
-            index = 0;
-        }
-        WeatherManager.shared().getWeatherBySpecificLocation(AppManager.shared(getContext()).loadLocationList().get(index), 10, "vi", new WeatherManager.WeatherCallback() {
+    private void callAPI() {
+        WeatherManager.shared().getWeatherBySpecificLocation(selectedLocation.name, 10, "vi", new WeatherManager.WeatherCallback() {
             @Override
             public void onSuccess(WeatherResponse weatherResponse) {
+                weatherResponseLocation = weatherResponse;
                 hoursList = get24HourForecast(weatherResponse);
                 daysList = weatherResponse.forecast.forecastday;
-                getActivity().runOnUiThread(() -> {
-                    updateUI(weatherResponse);
-                });
+                updateUI(weatherResponse);
             }
 
             @Override
@@ -156,7 +137,6 @@ public class HomeFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
         nestedScrollView.setVisibility(View.VISIBLE);
 
-        tvMenu.setText(weatherResponse.location.name + " ▼");
         tvLocation.setText(weatherResponse.location.name);
         tvTemp.setText(String.valueOf((int) weatherResponse.current.temp_c) + "°");
         tvStatus.setText(weatherResponse.current.condition.text);
@@ -210,5 +190,34 @@ public class HomeFragment extends Fragment {
         }
 
         return hourlyForecasts;
+    }
+
+    private void addLocation() {
+        List<String> locationListString = AppManager.shared(getContext()).loadLocationList();
+        locationListString.add(selectedLocation.name);
+        AppManager.shared(getContext()).saveLocationList(locationListString);
+
+        WeatherManager.shared().locationList.add(weatherResponseLocation);
+
+        if (listener != null) {
+            listener.updateUI();
+        }
+        dismiss();
+    }
+
+    public void onStart() {
+        super.onStart();
+        View view = getView();
+        if (view != null) {
+            View parent = (View) view.getParent();
+            BottomSheetBehavior<?> behavior = BottomSheetBehavior.from(parent);
+            int height = getResources().getDisplayMetrics().heightPixels * 19 / 20;
+            behavior.setPeekHeight(height);
+            parent.setBackgroundResource(android.R.color.transparent);
+        }
+    }
+
+    public interface LocationForecastFragmentListener {
+        void updateUI();
     }
 }

@@ -17,7 +17,7 @@ public class WeatherManager {
     private static WeatherManager instance;
     private WeatherAPIService apiService;
     private static final String API_KEY = "dc7e6eea1ece4db598e92310241407";
-    private List<WeatherResponse> locationList;
+    public List<WeatherResponse> locationList;
 
 
     public WeatherManager() {

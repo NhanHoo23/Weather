@@ -24,7 +24,7 @@ import fpoly.nhanhhph47395.weather.models.WeatherResponse;
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.LocationViewHolder> {
     private Context mContext;
     private List<WeatherResponse> list;
-    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd H:mm");
     SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm");
 
     public LocationAdapter(Context mContext) {

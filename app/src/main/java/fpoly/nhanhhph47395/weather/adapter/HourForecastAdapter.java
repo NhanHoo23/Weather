@@ -26,7 +26,7 @@ public class HourForecastAdapter extends RecyclerView.Adapter<HourForecastAdapte
 
     private Context mContext;
     private List<Forecast.ForecastDay.Hour> list;
-    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd H:mm");
     SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm");
 
     public HourForecastAdapter(Context mContext, List<Forecast.ForecastDay.Hour> list) {

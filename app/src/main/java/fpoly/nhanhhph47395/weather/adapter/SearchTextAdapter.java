@@ -33,9 +33,11 @@ import fpoly.nhanhhph47395.weather.models.Location;
 public class SearchTextAdapter extends RecyclerView.Adapter<SearchTextAdapter.SearchTextViewHolder> {
     private Context mContext;
     private List<Location> list;
+    private SearchTextAdapterClickListener listener;
 
-    public SearchTextAdapter(Context mContext) {
+    public SearchTextAdapter(Context mContext, SearchTextAdapterClickListener listener) {
         this.mContext = mContext;
+        this.listener = listener;
     }
 
     public void updateData(List<Location> newList) {
@@ -55,7 +57,7 @@ public class SearchTextAdapter extends RecyclerView.Adapter<SearchTextAdapter.Se
     public SearchTextViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View mView = LayoutInflater.from(mContext).inflate(android.R.layout.simple_list_item_1, parent, false);
 
-        return new SearchTextViewHolder(mView);
+        return new SearchTextViewHolder(mView, listener);
     }
 
     @Override
@@ -81,7 +83,7 @@ public class SearchTextAdapter extends RecyclerView.Adapter<SearchTextAdapter.Se
     public static class SearchTextViewHolder extends RecyclerView.ViewHolder {
         private TextView tvSearch;
 
-        public SearchTextViewHolder(@NonNull View itemView) {
+        public SearchTextViewHolder(@NonNull View itemView, final SearchTextAdapterClickListener listener) {
             super(itemView);
 
             tvSearch = itemView.findViewById(android.R.id.text1);
@@ -89,10 +91,25 @@ public class SearchTextAdapter extends RecyclerView.Adapter<SearchTextAdapter.Se
             tvSearch.setTypeface(Typeface.SANS_SERIF, Typeface.NORMAL);
             tvSearch.setEllipsize(TextUtils.TruncateAt.END); // Tạo dấu 3 chấm
             tvSearch.setTextColor(Color.parseColor("#000000"));
+
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(position);
+                    }
+                }
+            });
         }
 
         public void bind(String result) {
             tvSearch.setText(result);
         }
     }
+
+    public interface SearchTextAdapterClickListener {
+        void onItemClick(int position);
+    }
 }
+
+

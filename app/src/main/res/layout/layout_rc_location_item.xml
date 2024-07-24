@@ -1,89 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    app:cardElevation="0dp">
-
-    <RelativeLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/transparent"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        android:layout_marginBottom="16dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tvLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Vị trí của tôi"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:shadowColor="#40000000"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="10" />
+            <TextView
+                android:id="@+id/tvLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vị trí của tôi"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:shadowColor="#40000000"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="10" />
 
-        <TextView
-            android:id="@+id/tvTime"
-            android:layout_below="@id/tvLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="23:00"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="10sp"
-            android:textColor="@color/white"
-            android:shadowColor="#40000000"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="10" />
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_below="@id/tvLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="23:00"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="10sp"
+                android:textColor="@color/white"
+                android:shadowColor="#40000000"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="10" />
 
-        <TextView
-            android:id="@+id/tvTemp"
-            android:layout_alignParentEnd="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="28°"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="32sp"
-            android:textColor="@color/white" />
+            <TextView
+                android:id="@+id/tvTemp"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="28°"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="32sp"
+                android:textColor="@color/white" />
 
-        <TextView
-            android:id="@+id/tvCondition"
-            android:layout_below="@id/tvTime"
-            android:layout_marginTop="32dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Trời mưa"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="10sp"
-            android:textColor="@color/white" />
+            <TextView
+                android:id="@+id/tvCondition"
+                android:layout_below="@id/tvTime"
+                android:layout_marginTop="32dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trời mưa"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="10sp"
+                android:textColor="@color/white" />
 
-        <TextView
-            android:id="@+id/tvLowestTemp"
-            android:layout_alignTop="@id/tvCondition"
-            android:layout_alignParentEnd="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="T:28°"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="10sp"
-            android:textColor="@color/white" />
+            <TextView
+                android:id="@+id/tvLowestTemp"
+                android:layout_alignTop="@id/tvCondition"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="T:28°"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="10sp"
+                android:textColor="@color/white" />
 
-        <TextView
-            android:id="@+id/tvHighestTemp"
-            android:layout_alignTop="@id/tvCondition"
-            android:layout_toLeftOf="@id/tvLowestTemp"
-            android:layout_marginRight="8dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="C:40°"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="10sp"
-            android:textColor="@color/white" />
+            <TextView
+                android:id="@+id/tvHighestTemp"
+                android:layout_alignTop="@id/tvCondition"
+                android:layout_toLeftOf="@id/tvLowestTemp"
+                android:layout_marginRight="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="C:40°"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="10sp"
+                android:textColor="@color/white" />
 
-    </RelativeLayout>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
-</androidx.cardview.widget.CardView>
+</RelativeLayout>

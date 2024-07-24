@@ -3,6 +3,7 @@ package fpoly.nhanhhph47395.weather.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.material.search.SearchBar;
 import com.google.android.material.search.SearchView;
@@ -34,7 +36,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements SearchTextAdapter.SearchTextAdapterClickListener, LocationForecastFragment.LocationForecastFragmentListener {
     private SearchBar searchBar;
     private SearchView searchView;
     private RecyclerView rcSearch, rcLocation;
@@ -43,6 +45,7 @@ public class SearchFragment extends Fragment {
     private ProgressBar progressBar;
     private NoResultsView noResultsView;
     private List<WeatherResponse> locationList;
+    private List<Location> searchList;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -61,6 +64,16 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
+        setupView(view);
+
+        setupSearchViewClearListener();
+
+        setupSearchObservable();
+
+        return view;
+    }
+
+    private void setupView(View view) {
         searchBar = view.findViewById(R.id.searchBar);
         searchView = view.findViewById(R.id.searchView);
         rcSearch = view.findViewById(R.id.rcSearch);
@@ -75,11 +88,11 @@ public class SearchFragment extends Fragment {
         locationAdapter.updateData(locationList);
 
         rcSearch.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        searchTextAdapter = new SearchTextAdapter(getContext());
+        searchTextAdapter = new SearchTextAdapter(getContext(), this);
         rcSearch.setAdapter(searchTextAdapter);
+    }
 
-        setupSearchViewClearListener();
-
+    private void setupSearchObservable() {
         Observable<String> searchObservable = createSearchObservable();
         compositeDisposable.add(
                 searchObservable
@@ -110,21 +123,32 @@ public class SearchFragment extends Fragment {
                         .observeOn(AndroidSchedulers.mainThread()) //Quan sát và cập nhật kết quả trên luồng chính để cập nhật UI.
                         .subscribe(locations -> {
                             progressBar.setVisibility(View.GONE);
-                            List<Location> locationList = (List<Location>) locations;
-                            if (locationList.isEmpty()) {
+                            searchList = (List<Location>) locations;
+                            if (searchList.isEmpty()) {
                                 noResultsView.setVisibility(View.VISIBLE);
                             } else {
                                 noResultsView.setVisibility(View.GONE);
                             }
-                            searchTextAdapter.updateData(locationList);
+                            searchTextAdapter.updateData(searchList);
                         }, throwable -> {
                             progressBar.setVisibility(View.GONE);
                             noResultsView.setVisibility(View.VISIBLE);
                             Log.d("huhuhu", "error: " + throwable.getLocalizedMessage());
                         })
         );
+    }
 
-        return view;
+    @Override
+    public void onItemClick(int position) {
+        Toast.makeText(getContext(), "" + searchList.get(position).name, Toast.LENGTH_SHORT).show();
+        LocationForecastFragment bottomSheet = LocationForecastFragment.newInstance(searchList.get(position), this);
+        bottomSheet.show(((FragmentActivity) getContext()).getSupportFragmentManager(), bottomSheet.getTag());
+    }
+
+    @Override
+    public void updateUI() {
+        searchView.hide();
+        locationAdapter.updateData(WeatherManager.shared().getLocationList());
     }
 
     private Observable<String> createSearchObservable() {
@@ -167,4 +191,6 @@ public class SearchFragment extends Fragment {
         super.onDestroyView();
         compositeDisposable.clear();
     }
+
+
 }

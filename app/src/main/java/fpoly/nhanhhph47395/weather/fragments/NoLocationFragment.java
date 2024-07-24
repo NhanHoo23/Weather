@@ -20,12 +20,18 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+
+import java.util.List;
 
 import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.screens.SplashActivity;
 import fpoly.nhanhhph47395.weather.utils.AppManager;
+import fpoly.nhanhhph47395.weather.utils.WeatherManager;
 
 public class NoLocationFragment extends Fragment {
     private ExtendedFloatingActionButton btnCurrentLocation, btnSearchLocation;
@@ -72,8 +78,14 @@ public class NoLocationFragment extends Fragment {
         if (requestCode == AppManager.shared(getContext()).REQUEST_LOCATION_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 AppManager.shared(getContext()).setLocationEnabled(true);
-                getLastKnownLocation();
-                replaceFragment(new HomeFragment());
+                getLastKnownLocation()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                replaceFragment(new HomeFragment());
+                            } else {
+                                Log.d("Location Error", "Failed to get location", task.getException());
+                            }
+                        });
             } else {
                 AppManager.shared(getContext()).setLocationEnabled(false);
             }
@@ -88,10 +100,12 @@ public class NoLocationFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
-    private void getLastKnownLocation() {
+    private Task<Void> getLastKnownLocation() {
+        final TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            taskCompletionSource.setException(new SecurityException("Location permissions not granted"));
+            return taskCompletionSource.getTask();
         }
 
         fusedLocationClient.getLastLocation()
@@ -103,8 +117,25 @@ public class NoLocationFragment extends Fragment {
                             AppManager.shared(getContext()).setDefaultLatitude((float) location.getLatitude());
                             Log.d("Long", "onSuccess: " + location.getLongitude());
                             Log.d("Lat", "onSuccess: " + location.getLatitude());
+
+                            List<String> locationList = AppManager.shared(getContext()).loadLocationList();
+                            String latAndLong = location.getLatitude()+","+location.getLongitude();
+                            if (locationList.isEmpty()) {
+                                locationList.add(latAndLong);
+                            } else {
+                                locationList.set(0, latAndLong);
+                            }
+                            AppManager.shared(getContext()).saveLocationList(locationList);
+
+                            //Lưu mảng location cho searchFragment
+                            WeatherManager.shared().fetchAndStoreWeatherData(getContext());
+
+                            taskCompletionSource.setResult(null);
+                        } else {
+                            taskCompletionSource.setException(new Exception("Location is null"));
                         }
                     }
                 });
+        return taskCompletionSource.getTask();
     }
 }

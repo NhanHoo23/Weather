@@ -17,14 +17,6 @@ public interface WeatherAPIService {
             @Query("lang") String language
     );
 
-    @GET("forecast.json")
-    Call<WeatherResponse> getWeatherByLongAndLat(
-            @Query("key") String apiKey,
-            @Query("q") String latAndLong,
-            @Query("days") int days,
-            @Query("lang") String language
-    );
-
     @GET("search.json")
     Call<List<Location>> searchLocations(
             @Query("key") String apiKey,
