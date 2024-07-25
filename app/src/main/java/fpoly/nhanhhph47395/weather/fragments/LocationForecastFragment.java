@@ -27,6 +27,7 @@ import java.util.List;
 import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.adapter.DayForecastAdapter;
 import fpoly.nhanhhph47395.weather.adapter.HourForecastAdapter;
+import fpoly.nhanhhph47395.weather.databinding.FragmentHomeBinding;
 import fpoly.nhanhhph47395.weather.models.Forecast;
 import fpoly.nhanhhph47395.weather.models.Location;
 import fpoly.nhanhhph47395.weather.models.WeatherEvaluate;
@@ -36,15 +37,10 @@ import fpoly.nhanhhph47395.weather.utils.AppManager;
 import fpoly.nhanhhph47395.weather.utils.WeatherManager;
 
 public class LocationForecastFragment extends BottomSheetDialogFragment {
+    private FragmentHomeBinding binding;
     private Location selectedLocation;
-    private NestedScrollView nestedScrollView;
-    private ProgressBar progressBar;
-    private RelativeLayout header;
-    private TextView tvMenu, tvCancel, tvAdd, tvLocation, tvTemp, tvStatus, tvHighestTemp, tvLowestTemp, tvPrecip, tvPrecipForecast, tvUV, tvUVWarning, tvUVAdvice, tvHumidity, tvHumidityEvaluate, tvVision, tvVisionEvaluate, tvFeelLike;
-    private RecyclerView rcHourForecast, rcDayForecast;
     private HourForecastAdapter hourForecastAdapter;
     private DayForecastAdapter dayForecastAdapter;
-    private WindView windView;
 
     private List<Forecast.ForecastDay.Hour> hoursList;
     private List<Forecast.ForecastDay> daysList;
@@ -66,7 +62,8 @@ public class LocationForecastFragment extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
         setupView(view);
 
@@ -75,41 +72,17 @@ public class LocationForecastFragment extends BottomSheetDialogFragment {
         return view;
     }
 
-    private void setupView(View v) {
-        v.setBackgroundResource(R.drawable.rounded_corner);
-        tvMenu = v.findViewById(R.id.dropdown_menu);
-        header = v.findViewById(R.id.header);
-        tvCancel = v.findViewById(R.id.tvCancel);
-        tvAdd = v.findViewById(R.id.tvAdd);
-        nestedScrollView = v.findViewById(R.id.nestedScrollView);
-        progressBar = v.findViewById(R.id.progressBar);
-        tvLocation = v.findViewById(R.id.tvLocation);
-        tvTemp = v.findViewById(R.id.tvTemp);
-        tvStatus = v.findViewById(R.id.tvStatus);
-        tvHighestTemp = v.findViewById(R.id.tvHighestTemp);
-        tvLowestTemp = v.findViewById(R.id.tvLowestTemp);
-        rcHourForecast = v.findViewById(R.id.rcHourForecast);
-        rcDayForecast = v.findViewById(R.id.rcDayForecast);
-        windView = v.findViewById(R.id.windView);
-        tvPrecip = v.findViewById(R.id.tvPrecip);
-        tvPrecipForecast = v.findViewById(R.id.tvPrecipForecast);
-        tvUV = v.findViewById(R.id.tvUV);
-        tvUVWarning = v.findViewById(R.id.tvUVWarning);
-        tvUVAdvice = v.findViewById(R.id.tvUVAdvice);
-        tvHumidity = v.findViewById(R.id.tvHumidity);
-        tvHumidityEvaluate = v.findViewById(R.id.tvHumidityEvaluate);
-        tvVision = v.findViewById(R.id.tvVision);
-        tvVisionEvaluate = v.findViewById(R.id.tvVisionEvaluate);
-        tvFeelLike = v.findViewById(R.id.tvFeelLike);
+    private void setupView(View view) {
+        view.setBackgroundResource(R.drawable.rounded_corner);
 
-        tvMenu.setVisibility(View.INVISIBLE);
-        tvLocation.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
-        nestedScrollView.setVisibility(View.INVISIBLE);
-        header.setVisibility(View.VISIBLE);
+        binding.dropdownMenu.setVisibility(View.INVISIBLE);
+        binding.tvLocation.setVisibility(View.VISIBLE);
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.nestedScrollView.setVisibility(View.INVISIBLE);
+        binding.header.setVisibility(View.VISIBLE);
 
-        tvCancel.setOnClickListener(v1 -> {dismiss();});
-        tvAdd.setOnClickListener(v1 -> {
+        binding.tvCancel.setOnClickListener(v -> {dismiss();});
+        binding.tvAdd.setOnClickListener(v -> {
             addLocation();
         });
     }
@@ -127,46 +100,46 @@ public class LocationForecastFragment extends BottomSheetDialogFragment {
             @Override
             public void onFailure(Throwable throwable) {
                 //In ra thông báo lỗi data hoặc ko có mạng
-                progressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
                 Log.d("Huhuhu", "Không lấy được data. Lỗi: " + throwable.getLocalizedMessage());
             }
         });
     }
 
     private void updateUI(WeatherResponse weatherResponse) {
-        progressBar.setVisibility(View.GONE);
-        nestedScrollView.setVisibility(View.VISIBLE);
+        binding.progressBar.setVisibility(View.GONE);
+        binding.nestedScrollView.setVisibility(View.VISIBLE);
 
-        tvLocation.setText(weatherResponse.location.name);
-        tvTemp.setText(String.valueOf((int) weatherResponse.current.temp_c) + "°");
-        tvStatus.setText(weatherResponse.current.condition.text);
-        tvHighestTemp.setText("C:" + String.valueOf((int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_c) + "°");
-        tvLowestTemp.setText("T:" + String.valueOf((int)weatherResponse.forecast.forecastday.get(0).day.mintemp_c) + "°");
+        binding.tvLocation.setText(weatherResponse.location.name);
+        binding.tvTemp.setText(String.valueOf((int) weatherResponse.current.temp_c) + "°");
+        binding.tvStatus.setText(weatherResponse.current.condition.text);
+        binding.tvHighestTemp.setText("C:" + String.valueOf((int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_c) + "°");
+        binding.tvLowestTemp.setText("T:" + String.valueOf((int)weatherResponse.forecast.forecastday.get(0).day.mintemp_c) + "°");
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        rcHourForecast.setLayoutManager(linearLayoutManager);
+        binding.rcHourForecast.setLayoutManager(linearLayoutManager);
         hourForecastAdapter = new HourForecastAdapter(getContext(), hoursList);
-        rcHourForecast.setAdapter(hourForecastAdapter);
+        binding.rcHourForecast.setAdapter(hourForecastAdapter);
 
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        rcDayForecast.setLayoutManager(linearLayoutManager2);
+        binding.rcDayForecast.setLayoutManager(linearLayoutManager2);
         dayForecastAdapter = new DayForecastAdapter(getContext(), daysList);
-        rcDayForecast.setAdapter(dayForecastAdapter);
+        binding.rcDayForecast.setAdapter(dayForecastAdapter);
 
-        windView.setWindDirection(weatherResponse.current.wind_degree, String.valueOf((int) weatherResponse.current.wind_kph), "km/h");
+        binding.windView.setWindDirection(weatherResponse.current.wind_degree, String.valueOf((int) weatherResponse.current.wind_kph), "km/h");
 
-        tvPrecip.setText(String.valueOf((int)weatherResponse.current.precip_mm) + " mm");
-        tvPrecipForecast.setText("Dự báo: " + (int)weatherResponse.forecast.forecastday.get(1).day.totalprecip_mm + "mm trong 24h tiếp theo" );
-        tvUV.setText(String.valueOf(weatherResponse.current.uv));
+        binding.tvPrecip.setText(String.valueOf((int)weatherResponse.current.precip_mm) + " mm");
+        binding.tvPrecipForecast.setText("Dự báo: " + (int)weatherResponse.forecast.forecastday.get(1).day.totalprecip_mm + "mm trong 24h tiếp theo" );
+        binding.tvUV.setText(String.valueOf(weatherResponse.current.uv));
         WeatherEvaluate.UVLevel uvLevel = WeatherEvaluate.UVLevel.getUVLevel(weatherResponse.current.uv);
-        tvUVWarning.setText(uvLevel.getDisplayName());
-        tvUVAdvice.setText(uvLevel.getDetailedDescription());
-        tvHumidity.setText(String.valueOf(weatherResponse.current.humidity)+"%");
-        tvHumidityEvaluate.setText("Điểm sương là " + (int)weatherResponse.current.dewpoint_c + "° ngay lúc này");
-        tvVision.setText(String.valueOf(weatherResponse.current.vis_km + " km"));
+        binding.tvUVWarning.setText(uvLevel.getDisplayName());
+        binding.tvUVAdvice.setText(uvLevel.getDetailedDescription());
+        binding.tvHumidity.setText(String.valueOf(weatherResponse.current.humidity)+"%");
+        binding.tvHumidityEvaluate.setText("Điểm sương là " + (int)weatherResponse.current.dewpoint_c + "° ngay lúc này");
+        binding.tvVision.setText(String.valueOf(weatherResponse.current.vis_km + " km"));
         WeatherEvaluate.VisibilityLevel visibilityLevel = WeatherEvaluate.VisibilityLevel.getVisibilityLevel(weatherResponse.current.vis_km);
-        tvVisionEvaluate.setText(visibilityLevel.getDisplayName());
-        tvFeelLike.setText(String.valueOf((int)weatherResponse.current.feelslike_c) + "°");
+        binding.tvVisionEvaluate.setText(visibilityLevel.getDisplayName());
+        binding.tvFeelLike.setText(String.valueOf((int)weatherResponse.current.feelslike_c) + "°");
     }
 
     private List<Forecast.ForecastDay.Hour> get24HourForecast(WeatherResponse weatherResponse) {

@@ -3,8 +3,13 @@ package fpoly.nhanhhph47395.weather.utils;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.Tasks;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import fpoly.nhanhhph47395.weather.models.Location;
 import fpoly.nhanhhph47395.weather.models.WeatherResponse;
@@ -75,22 +80,33 @@ public class WeatherManager {
         });
     }
 
-    public void fetchAndStoreWeatherData(Context context) {
+    public CompletableFuture<Void> fetchAndStoreWeatherData(Context context) {
         List<String> locationListString = AppManager.shared(context).loadLocationList();
+        CompletableFuture<Void> future = CompletableFuture.completedFuture(null);
 
         for (String location : locationListString) {
-            getWeatherBySpecificLocation(location, 10, "vi", new WeatherCallback() {
-                @Override
-                public void onSuccess(WeatherResponse weatherResponse) {
-                    locationList.add(weatherResponse);
-                }
+            future = future.thenCompose(v -> { //thenCompose tạo chuỗi các tác vụ
+                CompletableFuture<Void> apiCallFuture = new CompletableFuture<>();
+                getWeatherBySpecificLocation(location, 10, "vi", new WeatherCallback() {
+                    @Override
+                    public void onSuccess(WeatherResponse weatherResponse) {
+                        synchronized (locationList) {
+                            locationList.add(weatherResponse);
+                        }
+                        apiCallFuture.complete(null);
+                    }
 
-                @Override
-                public void onFailure(Throwable throwable) {
-                    Log.d("onFailure", "onFailure: " + location + "-" +throwable.getLocalizedMessage());
-                }
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        Log.d("onFailure", "onFailure: " + location + "-" + throwable.getLocalizedMessage());
+                        apiCallFuture.completeExceptionally(throwable);
+                    }
+                });
+                return apiCallFuture;
             });
         }
+
+        return future;
     }
 
     public interface WeatherCallback {

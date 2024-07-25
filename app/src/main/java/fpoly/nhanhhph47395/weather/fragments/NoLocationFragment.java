@@ -29,17 +29,18 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import java.util.List;
 
 import fpoly.nhanhhph47395.weather.R;
+import fpoly.nhanhhph47395.weather.databinding.FragmentHomeBinding;
+import fpoly.nhanhhph47395.weather.databinding.FragmentNoLocationBinding;
 import fpoly.nhanhhph47395.weather.screens.SplashActivity;
 import fpoly.nhanhhph47395.weather.utils.AppManager;
 import fpoly.nhanhhph47395.weather.utils.WeatherManager;
 
 public class NoLocationFragment extends Fragment {
-    private ExtendedFloatingActionButton btnCurrentLocation, btnSearchLocation;
+    private FragmentNoLocationBinding binding;
+//    private ExtendedFloatingActionButton btnCurrentLocation, btnSearchLocation;
     private FusedLocationProviderClient fusedLocationClient;
 
-    public NoLocationFragment() {
-        // Required empty public constructor
-    }
+    public NoLocationFragment() {}
 
     public static NoLocationFragment newInstance() {
         NoLocationFragment fragment = new NoLocationFragment();
@@ -50,14 +51,17 @@ public class NoLocationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_no_location, container, false);
+        binding = FragmentNoLocationBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
-        btnCurrentLocation = view.findViewById(R.id.btnCurrentLocation);
-        btnSearchLocation = view.findViewById(R.id.btnSearchLocation);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-        btnCurrentLocation.setOnClickListener(v -> {
+        binding.btnCurrentLocation.setOnClickListener(v -> {
             requestLocationPermission();
+        });
+
+        binding.btnSearchLocation.setOnClickListener(v -> {
+            replaceFragment(new SearchFragment());
         });
 
         return view;
@@ -77,14 +81,21 @@ public class NoLocationFragment extends Fragment {
 
         if (requestCode == AppManager.shared(getContext()).REQUEST_LOCATION_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                AppManager.shared(getContext()).setLocationEnabled(true);
                 getLastKnownLocation()
                         .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                replaceFragment(new HomeFragment());
-                            } else {
-                                Log.d("Location Error", "Failed to get location", task.getException());
+                            if (!task.isSuccessful()) {
+                                Log.e("Initialization Error", "Failed to get last known location", task.getException());
                             }
+
+                            WeatherManager.shared().locationList.clear();
+                            WeatherManager.shared().fetchAndStoreWeatherData(getContext())
+                                    .thenAccept(aVoid -> {
+                                        replaceFragment(new HomeFragment());
+                                    })
+                                    .exceptionally(throwable -> {
+                                        Log.e("Initialization Error", "Failed to fetch weather data", throwable);
+                                        return null;
+                                    });
                         });
             } else {
                 AppManager.shared(getContext()).setLocationEnabled(false);
@@ -115,20 +126,19 @@ public class NoLocationFragment extends Fragment {
                         if (location != null) {
                             AppManager.shared(getContext()).setDefaultLongitude((float) location.getLongitude());
                             AppManager.shared(getContext()).setDefaultLatitude((float) location.getLatitude());
-                            Log.d("Long", "onSuccess: " + location.getLongitude());
-                            Log.d("Lat", "onSuccess: " + location.getLatitude());
 
                             List<String> locationList = AppManager.shared(getContext()).loadLocationList();
                             String latAndLong = location.getLatitude()+","+location.getLongitude();
                             if (locationList.isEmpty()) {
                                 locationList.add(latAndLong);
                             } else {
-                                locationList.set(0, latAndLong);
+                                if (AppManager.shared(getContext()).isLocationEnabled()) {
+                                    locationList.set(0, latAndLong);
+                                } else {
+                                    locationList.add(0, latAndLong);
+                                }
                             }
                             AppManager.shared(getContext()).saveLocationList(locationList);
-
-                            //Lưu mảng location cho searchFragment
-                            WeatherManager.shared().fetchAndStoreWeatherData(getContext());
 
                             taskCompletionSource.setResult(null);
                         } else {

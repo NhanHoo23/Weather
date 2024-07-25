@@ -52,4 +52,6 @@ dependencies {
     implementation ("com.squareup.okhttp3:logging-interceptor:4.9.1")
     implementation ("io.reactivex.rxjava3:rxjava:3.0.0")
     implementation ("io.reactivex.rxjava3:rxandroid:3.0.0")
+    implementation ("com.github.tsuryo:Swipeable-RecyclerView:1.3")
+    implementation ("androidx.recyclerview:recyclerview:+")
 }

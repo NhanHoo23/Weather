@@ -25,7 +25,6 @@ converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", ve
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }
-#implementation 'com.google.android.gms:play-services-location:21.0.1'
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

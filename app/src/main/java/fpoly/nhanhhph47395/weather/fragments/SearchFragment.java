@@ -1,5 +1,6 @@
 package fpoly.nhanhhph47395.weather.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -27,9 +28,11 @@ import java.util.concurrent.TimeUnit;
 import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.adapter.LocationAdapter;
 import fpoly.nhanhhph47395.weather.adapter.SearchTextAdapter;
+import fpoly.nhanhhph47395.weather.databinding.FragmentSearchBinding;
 import fpoly.nhanhhph47395.weather.models.Location;
 import fpoly.nhanhhph47395.weather.models.WeatherResponse;
 import fpoly.nhanhhph47395.weather.subviews.NoResultsView;
+import fpoly.nhanhhph47395.weather.utils.AppManager;
 import fpoly.nhanhhph47395.weather.utils.WeatherManager;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -37,21 +40,34 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class SearchFragment extends Fragment implements SearchTextAdapter.SearchTextAdapterClickListener, LocationForecastFragment.LocationForecastFragmentListener {
-    private SearchBar searchBar;
-    private SearchView searchView;
-    private RecyclerView rcSearch, rcLocation;
+    private FragmentSearchBinding binding;
     private LocationAdapter locationAdapter;
     private SearchTextAdapter searchTextAdapter;
-    private ProgressBar progressBar;
-    private NoResultsView noResultsView;
     private List<WeatherResponse> locationList;
     private List<Location> searchList;
 
+    private LocationAdapter.OnLocationSelectedListener listener;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public SearchFragment() {
-        // Required empty public constructor
+    private boolean isSelect = false;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof LocationAdapter.OnLocationSelectedListener) {
+            listener = (LocationAdapter.OnLocationSelectedListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnLocationSelectedListener");
+        }
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
+
+    public SearchFragment() {}
 
     public static SearchFragment newInstance() {
         SearchFragment fragment = new SearchFragment();
@@ -62,9 +78,10 @@ public class SearchFragment extends Fragment implements SearchTextAdapter.Search
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search, container, false);
+        binding = FragmentSearchBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
-        setupView(view);
+        setupView();
 
         setupSearchViewClearListener();
 
@@ -73,23 +90,28 @@ public class SearchFragment extends Fragment implements SearchTextAdapter.Search
         return view;
     }
 
-    private void setupView(View view) {
-        searchBar = view.findViewById(R.id.searchBar);
-        searchView = view.findViewById(R.id.searchView);
-        rcSearch = view.findViewById(R.id.rcSearch);
-        rcLocation = view.findViewById(R.id.rcLocation);
-        progressBar = view.findViewById(R.id.progressBar);
-        noResultsView = view.findViewById(R.id.noResultsView);
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        compositeDisposable.clear();
+    }
 
-        rcLocation.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        locationAdapter = new LocationAdapter(getContext());
-        rcLocation.setAdapter(locationAdapter);
+    private void setupView() {
+        binding.rcLocation.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        locationAdapter = new LocationAdapter(getContext(), listener, this);
+        binding.rcLocation.setAdapter(locationAdapter);
         locationList = WeatherManager.shared().getLocationList();
         locationAdapter.updateData(locationList);
 
-        rcSearch.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        binding.rcSearch.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         searchTextAdapter = new SearchTextAdapter(getContext(), this);
-        rcSearch.setAdapter(searchTextAdapter);
+        binding.rcSearch.setAdapter(searchTextAdapter);
+
+        binding.tvSelect.setOnClickListener(v -> {
+            isSelect = !isSelect;
+            binding.tvSelect.setText(isSelect ? "Xong" : "Chọn");
+            locationAdapter.toggleDeleteButton();
+        });
     }
 
     private void setupSearchObservable() {
@@ -101,8 +123,8 @@ public class SearchFragment extends Fragment implements SearchTextAdapter.Search
                         .filter(query -> !query.isEmpty())
                         .switchMap(query -> Observable.create(emitter -> {
                                     getActivity().runOnUiThread(() -> {
-                                        progressBar.setVisibility(View.VISIBLE);
-                                        noResultsView.setVisibility(View.GONE);
+                                        binding.progressBar.setVisibility(View.VISIBLE);
+                                        binding.noResultsView.setVisibility(View.GONE);
                                     });
                                     WeatherManager.shared().getSearchResults(query, new WeatherManager.SearchCallback() {
 
@@ -122,17 +144,17 @@ public class SearchFragment extends Fragment implements SearchTextAdapter.Search
                         .subscribeOn(Schedulers.io()) //Thực hiện các thao tác tìm kiếm trên luồng I/O, tránh chặn luồng chính.
                         .observeOn(AndroidSchedulers.mainThread()) //Quan sát và cập nhật kết quả trên luồng chính để cập nhật UI.
                         .subscribe(locations -> {
-                            progressBar.setVisibility(View.GONE);
+                            binding.progressBar.setVisibility(View.GONE);
                             searchList = (List<Location>) locations;
                             if (searchList.isEmpty()) {
-                                noResultsView.setVisibility(View.VISIBLE);
+                                binding.noResultsView.setVisibility(View.VISIBLE);
                             } else {
-                                noResultsView.setVisibility(View.GONE);
+                                binding.noResultsView.setVisibility(View.GONE);
                             }
                             searchTextAdapter.updateData(searchList);
                         }, throwable -> {
-                            progressBar.setVisibility(View.GONE);
-                            noResultsView.setVisibility(View.VISIBLE);
+                            binding.progressBar.setVisibility(View.GONE);
+                            binding.noResultsView.setVisibility(View.VISIBLE);
                             Log.d("huhuhu", "error: " + throwable.getLocalizedMessage());
                         })
         );
@@ -147,13 +169,13 @@ public class SearchFragment extends Fragment implements SearchTextAdapter.Search
 
     @Override
     public void updateUI() {
-        searchView.hide();
+        binding.searchView.hide();
         locationAdapter.updateData(WeatherManager.shared().getLocationList());
     }
 
     private Observable<String> createSearchObservable() {
         return Observable.create(emitter -> {
-            searchView.getEditText().addTextChangedListener(new TextWatcher() {
+            binding.searchView.getEditText().addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -170,7 +192,7 @@ public class SearchFragment extends Fragment implements SearchTextAdapter.Search
     }
 
     private void setupSearchViewClearListener() {
-        searchView.getEditText().addTextChangedListener(new TextWatcher() {
+        binding.searchView.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -186,11 +208,14 @@ public class SearchFragment extends Fragment implements SearchTextAdapter.Search
         });
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        compositeDisposable.clear();
+    public void deleteItem(int position) {
+        isSelect = false;
+        binding.tvSelect.setText("Chọn");
+        List<String> listLocationString = AppManager.shared(getContext()).loadLocationList();
+        listLocationString.remove(position);
+        AppManager.shared(getContext()).saveLocationList(listLocationString);
+        WeatherManager.shared().locationList.remove(position);
+        locationAdapter.toggleDeleteButton();
     }
-
 
 }
