@@ -18,6 +18,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.core.content.res.ResourcesCompat;
+
+import fpoly.nhanhhph47395.weather.R;
+
 public class WindView extends View {
 
     private final int STROKE_WIDTH = 20;
@@ -101,25 +105,8 @@ public class WindView extends View {
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(50);
-        textPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD));
+        textPaint.setTypeface(ResourcesCompat.getFont(getContext(), R.font.roboto_medium));
         textPaint.setTextAlign(Paint.Align.CENTER);
-    }
-
-    private Path createArrowPath() {
-        float arrowSize = STROKE_WIDTH * 2;
-        float arrowAngle = 30; // Góc mở của mũi tên
-
-        Path path = new Path();
-        path.moveTo(0, -arrowSize / 2);
-        path.lineTo(arrowSize / 2, arrowSize / 2);
-        path.lineTo(-arrowSize / 2, arrowSize / 2);
-        path.close();
-
-        Matrix matrix = new Matrix();
-        matrix.postRotate(arrowAngle); // Xoay mũi tên
-        path.transform(matrix);
-
-        return path;
     }
 
     public void setWindDirection(double degrees, String windSpeed, String windUnit) {
@@ -166,7 +153,6 @@ public class WindView extends View {
         textPaint.setTextSize(35);
         textPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
         canvas.drawText(windUnit, xCenter, yCenter + textPaint.getTextSize(), textPaint);
-
 
         // Thiết lập Matrix để xoay linePaint và arrowPaint
         Matrix matrix = new Matrix();

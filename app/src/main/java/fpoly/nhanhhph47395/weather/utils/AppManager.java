@@ -31,6 +31,19 @@ public class AppManager {
         return instance;
     }
 
+    public void setFirstLogin(boolean enabled) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isFirstLogin", enabled);
+        editor.apply();
+    }
+
+    public boolean isFirstLogin() {
+        return sharedPreferences.getBoolean("isFirstLogin", false);
+    }
+
+
+
+    //Setting
     public void setLocationEnabled(boolean enabled) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(KEY_LOCATION_ENABLED, enabled);
@@ -49,16 +62,6 @@ public class AppManager {
 
     public boolean isNotificationEnabled() {
         return sharedPreferences.getBoolean(KEY_NOTIFICATION_ENABLED, false);
-    }
-
-    public void setFirstLogin(boolean enabled) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("isFirstLogin", enabled);
-        editor.apply();
-    }
-
-    public boolean isFirstLogin() {
-        return sharedPreferences.getBoolean("isFirstLogin", false);
     }
 
     public void setDefaultLongitude(float longitude) {
@@ -91,6 +94,66 @@ public class AppManager {
         String json = sharedPreferences.getString("locationList", "[]");
         Type type = new TypeToken<List<String>>() {}.getType();
         return new Gson().fromJson(json, type);
+    }
+
+    public void setSelectedTempIndex(int index) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("selectedTempIndex", index);
+        editor.apply();
+    }
+
+    public int getSelectedTempIndex() {
+        return sharedPreferences.getInt("selectedTempIndex", 0);
+    }
+
+    public void setSelectedWindSpeedIndex(int index) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("selectedWindSpeedIndex", index);
+        editor.apply();
+    }
+
+    public int getSelectedWindSpeedIndex() {
+        return sharedPreferences.getInt("selectedWindSpeedIndex", 0);
+    }
+
+    public void setSelectedPrecipitationIndex(int index) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("selectedPrecipitationIndex", index);
+        editor.apply();
+    }
+
+    public int getSelectedPrecipitationIndex() {
+        return sharedPreferences.getInt("selectedPrecipitationIndex", 0);
+    }
+
+    public void setSelectedDistanceIndex(int index) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("selectedDistanceIndex", index);
+        editor.apply();
+    }
+
+    public int getSelectedDistanceIndex() {
+        return sharedPreferences.getInt("selectedDistanceIndex", 0);
+    }
+
+    public void setSelectedLanguageIndex(int index) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("selectedLanguageIndex", index);
+        editor.apply();
+    }
+
+    public int getSelectedLanguageIndex() {
+        return sharedPreferences.getInt("selectedLanguageIndex", 0);
+    }
+
+    public void setSelectedDefaultLocationIndex(int index) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("selectedDefaultLocationIndex", index);
+        editor.apply();
+    }
+
+    public int getSelectedDefaultLocationIndex() {
+        return sharedPreferences.getInt("selectedDefaultLocationIndex", 0);
     }
 }
 

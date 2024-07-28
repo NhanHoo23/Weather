@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +17,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Weather"
         tools:targetApi="31">
+        <activity
+            android:name=".screens.DefaultLocationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.LanguageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.unitSetting.PrecipitationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.unitSetting.DistanceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.unitSetting.WindSpeedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.unitSetting.TempActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.unitSetting.UnitSettingActivity"
+            android:exported="false" />
         <activity
             android:name=".screens.MainActivity"
             android:exported="false" />

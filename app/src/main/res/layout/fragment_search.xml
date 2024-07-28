@@ -8,6 +8,17 @@
     android:background="@color/mainBackgroundColor">
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tìm kiếm"
+        android:textSize="32sp"
+        android:fontFamily="@font/roboto_bold"
+        android:textColor="@color/mainTextColor"
+        android:layout_marginTop="62dp"
+        android:layout_marginLeft="16dp"
+        />
+
+    <TextView
         android:id="@+id/tvSelect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,7 +37,7 @@
         android:id="@+id/searchBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="122dp"
         android:hint="Tìm kiếm thành phố" />
 
     <com.google.android.material.search.SearchView
@@ -59,8 +70,7 @@
         android:id="@+id/rcLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="144dp"
+        android:layout_marginTop="202dp"
         android:layout_marginHorizontal="16dp"/>
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
