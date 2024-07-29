@@ -21,7 +21,7 @@ import retrofit2.Retrofit;
 public class WeatherManager {
     private static WeatherManager instance;
     private WeatherAPIService apiService;
-    private static final String API_KEY = "4f1564095cd648ba9b1153531242807";
+    private static final String API_KEY = "5d1ae5737ac1422c90b10706242907";
     public List<WeatherResponse> locationList;
 
 

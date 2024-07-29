@@ -20,6 +20,7 @@ import java.util.List;
 
 import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.models.Forecast;
+import fpoly.nhanhhph47395.weather.utils.AppManager;
 
 
 public class HourForecastAdapter extends RecyclerView.Adapter<HourForecastAdapter.HourForecastViewHolder> {
@@ -52,10 +53,11 @@ public class HourForecastAdapter extends RecyclerView.Adapter<HourForecastAdapte
 
             holder.tvHour.setText(formattedTime);
             Glide.with(mContext)
-                    .load("https:" + hour.condition.icon) // Add "https:" if the URL is relative
+                    .load("https:" + hour.condition.icon)
                     .into(holder.imgWeather);
             holder.tvHumidity.setText("\uD83D\uDCA7" + hour.humidity + "%");
-            holder.tvTemp.setText((int)hour.temp_c + "°");
+            boolean isTempC = AppManager.shared(mContext).getSelectedTempIndex() == 0;
+            holder.tvTemp.setText((isTempC ? (int)hour.temp_c : (int)hour.temp_f) + "°");
         } catch (Exception e) {
             e.printStackTrace();
         }

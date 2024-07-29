@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.models.Forecast;
+import fpoly.nhanhhph47395.weather.utils.AppManager;
 
 
 public class DayForecastAdapter extends RecyclerView.Adapter<DayForecastAdapter.DayForecastViewHolder> {
@@ -73,7 +74,8 @@ public class DayForecastAdapter extends RecyclerView.Adapter<DayForecastAdapter.
                     .load("https:" + day.day.condition.icon)
                     .into(holder.imgWeather);
             holder.tvHumidity.setText("\uD83D\uDCA7" + day.day.avghumidity + "%");
-            holder.tvTemp.setText((int)day.day.mintemp_c + "°/" + (int)day.day.maxtemp_c + "°");
+            boolean isTempC = AppManager.shared(mContext).getSelectedTempIndex() == 0;
+            holder.tvTemp.setText((isTempC ? (int)day.day.mintemp_c : (int)day.day.mintemp_f) + "°/" + (isTempC ? (int)day.day.maxtemp_c : (int)day.day.maxtemp_f) + "°");
         } catch (Exception e) {
             e.printStackTrace();
         }

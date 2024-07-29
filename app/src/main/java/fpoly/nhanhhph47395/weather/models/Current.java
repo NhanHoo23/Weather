@@ -6,9 +6,11 @@ public class Current {
     public String last_updated;
     public Condition condition;
     public double precip_mm;
+    public double precip_in;
     public int uv;
     public int humidity;
     public int vis_km;
+    public int vis_miles;
     public double feelslike_c;
     public double feelslike_f;
     public double dewpoint_c;

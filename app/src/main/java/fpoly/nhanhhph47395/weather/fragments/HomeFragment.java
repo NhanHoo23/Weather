@@ -39,11 +39,6 @@ import fpoly.nhanhhph47395.weather.subviews.WindView;
 import fpoly.nhanhhph47395.weather.utils.AppManager;
 import fpoly.nhanhhph47395.weather.utils.WeatherManager;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private HourForecastAdapter hourForecastAdapter;
@@ -54,12 +49,6 @@ public class HomeFragment extends Fragment {
     private List<Forecast.ForecastDay> daysList;
 
     public HomeFragment() {}
-
-    public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
-
-        return fragment;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -140,10 +129,11 @@ public class HomeFragment extends Fragment {
 
         binding.dropdownMenu.setText(weatherResponse.location.name + " ▼");
         binding.tvLocation.setText(weatherResponse.location.name);
-        binding.tvTemp.setText(String.valueOf((int) weatherResponse.current.temp_c) + "°");
+        boolean isTempC = AppManager.shared(getContext()).getSelectedTempIndex() == 0;
+        binding.tvTemp.setText((isTempC ? (int) weatherResponse.current.temp_c : (int) weatherResponse.current.temp_f) + "°");
         binding.tvStatus.setText(weatherResponse.current.condition.text);
-        binding.tvHighestTemp.setText("C:" + String.valueOf((int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_c) + "°");
-        binding.tvLowestTemp.setText("T:" + String.valueOf((int)weatherResponse.forecast.forecastday.get(0).day.mintemp_c) + "°");
+        binding.tvHighestTemp.setText("C:" + (isTempC ? (int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_c : (int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_f) + "°");
+        binding.tvLowestTemp.setText("T:" + (isTempC ? (int)weatherResponse.forecast.forecastday.get(0).day.mintemp_c : (int)weatherResponse.forecast.forecastday.get(0).day.mintemp_f) + "°");
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         binding.rcHourForecast.setLayoutManager(linearLayoutManager);
@@ -155,20 +145,23 @@ public class HomeFragment extends Fragment {
         dayForecastAdapter = new DayForecastAdapter(getContext(), daysList);
         binding.rcDayForecast.setAdapter(dayForecastAdapter);
 
-        binding.windView.setWindDirection(weatherResponse.current.wind_degree, String.valueOf((int) weatherResponse.current.wind_kph), "km/h");
+        boolean isKmh = AppManager.shared(getContext()).getSelectedWindSpeedIndex() == 0;
+        binding.windView.setWindDirection(weatherResponse.current.wind_degree, String.valueOf((isKmh ? (int) weatherResponse.current.wind_kph : (int) weatherResponse.current.wind_mph)), isKmh ? "km/h" : "mph");
 
-        binding.tvPrecip.setText(String.valueOf((int)weatherResponse.current.precip_mm) + " mm");
-        binding.tvPrecipForecast.setText("Dự báo: " + (int)weatherResponse.forecast.forecastday.get(1).day.totalprecip_mm + "mm trong 24h tiếp theo" );
+        boolean isMm = AppManager.shared(getContext()).getSelectedPrecipitationIndex() == 0;
+        binding.tvPrecip.setText((isMm ? (int)weatherResponse.current.precip_mm : (int)weatherResponse.current.precip_in) + (isMm ? " mm" : " in"));
+        binding.tvPrecipForecast.setText("Dự báo: " + (isMm ? (int)weatherResponse.forecast.forecastday.get(1).day.totalprecip_mm : (int)weatherResponse.forecast.forecastday.get(1).day.totalprecip_in) + (isMm ? "mm" : "in")  + " trong 24h tiếp theo" );
         binding.tvUV.setText(String.valueOf(weatherResponse.current.uv));
         WeatherEvaluate.UVLevel uvLevel = WeatherEvaluate.UVLevel.getUVLevel(weatherResponse.current.uv);
         binding.tvUVWarning.setText(uvLevel.getDisplayName());
         binding.tvUVAdvice.setText(uvLevel.getDetailedDescription());
-        binding.tvHumidity.setText(String.valueOf(weatherResponse.current.humidity)+"%");
-        binding.tvHumidityEvaluate.setText("Điểm sương là " + (int)weatherResponse.current.dewpoint_c + "° ngay lúc này");
-        binding.tvVision.setText(String.valueOf(weatherResponse.current.vis_km + " km"));
+        binding.tvHumidity.setText(weatherResponse.current.humidity + "%");
+        binding.tvHumidityEvaluate.setText("Điểm sương là " + (isTempC ? (int)weatherResponse.current.dewpoint_c : (int)weatherResponse.current.dewpoint_f) + "° ngay lúc này");
+        boolean isKm = AppManager.shared(getContext()).getSelectedDistanceIndex() == 0;
+        binding.tvVision.setText((isKm ? weatherResponse.current.vis_km : weatherResponse.current.vis_miles) + (isKm ? " km" : " mi"));
         WeatherEvaluate.VisibilityLevel visibilityLevel = WeatherEvaluate.VisibilityLevel.getVisibilityLevel(weatherResponse.current.vis_km);
         binding.tvVisionEvaluate.setText(visibilityLevel.getDisplayName());
-        binding.tvFeelLike.setText(String.valueOf((int)weatherResponse.current.feelslike_c) + "°");
+        binding.tvFeelLike.setText((isTempC ? (int)weatherResponse.current.feelslike_c : (int)weatherResponse.current.feelslike_f) + "°");
     }
 
     private List<Forecast.ForecastDay.Hour> get24HourForecast(WeatherResponse weatherResponse) {

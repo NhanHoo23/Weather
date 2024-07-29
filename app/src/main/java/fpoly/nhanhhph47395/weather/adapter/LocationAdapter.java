@@ -84,9 +84,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         }
 
         holder.tvCondition.setText(weatherResponse.current.condition.text);
-        holder.tvTemp.setText(String.valueOf((int)weatherResponse.current.temp_c) + "°C");
-        holder.tvHighestTemp.setText("C:" + String.valueOf((int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_c) + "°");
-        holder.tvLowestTemp.setText("T:" + String.valueOf((int)weatherResponse.forecast.forecastday.get(0).day.mintemp_c) + "°");
+        boolean isTempC = AppManager.shared(mContext).getSelectedTempIndex() == 0;
+        holder.tvTemp.setText((isTempC ? (int)weatherResponse.current.temp_c : (int)weatherResponse.current.temp_f) + (isTempC ? "°C" : "°F"));
+        holder.tvHighestTemp.setText("C:" + (isTempC ? (int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_c : (int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_f) + "°");
+        holder.tvLowestTemp.setText("T:" + (isTempC ? (int)weatherResponse.forecast.forecastday.get(0).day.mintemp_c : (int)weatherResponse.forecast.forecastday.get(0).day.mintemp_f) + "°");
 
         if (position != 0) {
             if (showDeleteButton) {

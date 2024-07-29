@@ -27,6 +27,7 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.SettingV
     private Context mContext;
     private List<SettingModel> list;
     private OnClickListener listener;
+    private boolean isDarkMode = false;
 
     public SettingAdapter(Context mContext, List<SettingModel> list, OnClickListener listener) {
         this.mContext = mContext;
@@ -105,4 +106,9 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.SettingV
     public interface OnClickListener {
         void onItemClick(int position);
     }
+
+    public interface OnSwitch {
+
+    }
+
 }
