@@ -42,12 +42,12 @@ public class WindSpeedActivity extends AppCompatActivity implements SettingAdapt
     private void setupView() {
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Tốc độ gió");
+        getSupportActionBar().setTitle(getString(R.string.windSpeedSetting));
 
         boolean isDarkMode = AppManager.shared(this).getDarkModeStatus();
         list = new ArrayList<>();
-        list.add(new WindSpeedSettingModel("Kilomet trên giờ (km/h)", isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
-        list.add(new WindSpeedSettingModel("Dặm trên giờ (mph)", isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
+        list.add(new WindSpeedSettingModel(getString(R.string.windSpeedKmSetting), isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
+        list.add(new WindSpeedSettingModel(getString(R.string.windSpeedMphSetting), isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.rcSetting.setLayoutManager(linearLayoutManager);

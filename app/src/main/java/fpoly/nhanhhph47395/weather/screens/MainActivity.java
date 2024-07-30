@@ -1,11 +1,13 @@
 package fpoly.nhanhhph47395.weather.screens;
 
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements LocationAdapter.O
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        AppManager.setLocale(this, AppManager.shared(this).getSelectedLanguageIndex() == 0 ? "vi" : "en");
 
         if (AppManager.shared(this).isLocationEnabled()) {
             replaceFragment(new HomeFragment());

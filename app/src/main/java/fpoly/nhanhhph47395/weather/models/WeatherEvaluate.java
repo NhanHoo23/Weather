@@ -1,5 +1,9 @@
 package fpoly.nhanhhph47395.weather.models;
 
+import android.content.Context;
+
+import fpoly.nhanhhph47395.weather.R;
+
 public class WeatherEvaluate {
     public enum UVLevel {
         LOW("Thấp", "Thấp đến hết ngày"),
@@ -8,8 +12,8 @@ public class WeatherEvaluate {
         VERY_HIGH("Rất cao", "Rất cao, hạn chế ra ngoài"),
         EXTREME("Cực cao", "Cực cao, hãy ở trong nhà");
 
-        private final String displayName;
-        private final String detailedDescription;
+        private String displayName;
+        private String detailedDescription;
 
         UVLevel(String displayName, String detailedDescription) {
             this.displayName = displayName;
@@ -37,6 +41,19 @@ public class WeatherEvaluate {
                 return EXTREME;
             }
         }
+
+        public static void updateDisplayNames(Context context) {
+            LOW.displayName = context.getString(R.string.UVLowLevel);
+            LOW.detailedDescription = context.getString(R.string.UVLowLevelDes);
+            MODERATE.displayName = context.getString(R.string.UVModerateLevel);
+            MODERATE.detailedDescription = context.getString(R.string.UVModerateLevelDes);
+            HIGH.displayName = context.getString(R.string.UVHighLevel);
+            HIGH.detailedDescription = context.getString(R.string.UVHighLevelDes);
+            VERY_HIGH.displayName = context.getString(R.string.UVVeryHighLevel);
+            VERY_HIGH.detailedDescription = context.getString(R.string.UVVeryHighLevelDes);
+            EXTREME.displayName = context.getString(R.string.UVExtremeLevel);
+            EXTREME.detailedDescription = context.getString(R.string.UVExtremeLevelDes);
+        }
     }
 
     public enum VisibilityLevel {
@@ -46,7 +63,7 @@ public class WeatherEvaluate {
         POOR("Tầm nhìn kém"),
         VERY_POOR("Tầm nhìn rất kém");
 
-        private final String displayName;
+        private String displayName;
 
         VisibilityLevel(String displayName) {
             this.displayName = displayName;
@@ -56,7 +73,6 @@ public class WeatherEvaluate {
             return displayName;
         }
 
-        // Phương thức static để lấy mức tầm nhìn dựa trên giá trị tầm nhìn
         public static VisibilityLevel getVisibilityLevel(int visKm) {
             if (visKm >= 10) {
                 return EXCELLENT;
@@ -69,6 +85,14 @@ public class WeatherEvaluate {
             } else {
                 return VERY_POOR;
             }
+        }
+
+        public static void updateDisplayNames(Context context) {
+            EXCELLENT.displayName = context.getString(R.string.visionExcellentLevelDes);
+            GOOD.displayName = context.getString(R.string.visionGoodLevelDes);
+            MODERATE.displayName = context.getString(R.string.visionModerateLevelDes);
+            POOR.displayName = context.getString(R.string.visionPoorLevelDes);
+            VERY_POOR.displayName = context.getString(R.string.visionVeryPoorLevelDes);
         }
     }
 }

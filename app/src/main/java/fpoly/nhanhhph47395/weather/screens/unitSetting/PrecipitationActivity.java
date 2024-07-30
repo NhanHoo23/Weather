@@ -42,7 +42,7 @@ public class PrecipitationActivity extends AppCompatActivity implements SettingA
     private void setupView() {
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Lượng mưa");
+        getSupportActionBar().setTitle(getString(R.string.precipSetting));
 
         boolean isDarkMode = AppManager.shared(this).getDarkModeStatus();
         list = new ArrayList<>();

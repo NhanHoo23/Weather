@@ -3,6 +3,7 @@ package fpoly.nhanhhph47395.weather.utils;
 import android.app.UiModeManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -11,6 +12,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Locale;
 
 public class AppManager {
     private static final String PREFS_NAME = "app_prefs";
@@ -183,6 +185,14 @@ public class AppManager {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+    }
+
+    public static void setLocale(Context context, String languageCode) {
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        context.getResources().updateConfiguration(config, context.getResources().getDisplayMetrics());
     }
 
 }

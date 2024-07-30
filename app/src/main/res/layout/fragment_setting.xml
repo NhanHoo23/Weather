@@ -9,11 +9,12 @@
     android:background="?attr/mainBackgroundColor">
 
     <TextView
+        android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="62dp"
         android:fontFamily="@font/roboto_bold"
-        android:text="Cài đặt"
+        android:text="@string/setting"
         android:textColor="?attr/mainTextColor"
         android:textSize="32sp" />
 

@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.TaskCompletionSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.fragments.HomeFragment;
@@ -45,8 +46,17 @@ public class SplashActivity extends AppCompatActivity {
 
         if (AppManager.shared(this).isFirstLogin()) {
             AppManager.shared(this).setDarkModeStatusBasedOnDevice(this);
+
+            String deviceLanguage = Locale.getDefault().getLanguage();
+
+            if (deviceLanguage.equals("vi")) {
+                AppManager.shared(this).setSelectedLanguageIndex(0);
+            } else {
+                AppManager.shared(this).setSelectedLanguageIndex(1);
+            }
         }
         AppManager.applyTheme(AppManager.shared(this).getDarkModeStatus());
+
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 

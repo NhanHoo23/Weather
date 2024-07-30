@@ -43,14 +43,14 @@ public class UnitSettingActivity extends AppCompatActivity implements SettingAda
     private void setupView() {
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Đơn vị");
+        getSupportActionBar().setTitle(getString(R.string.unitSetting));
 
         boolean isDarkMode = AppManager.shared(this).getDarkModeStatus();
         list = new ArrayList<>();
-        list.add(new SettingModel("Nhiệt độ", isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
-        list.add(new SettingModel("Tốc độ gió", isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
-        list.add(new SettingModel("Khoảng cách", isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
-        list.add(new SettingModel("Lượng mưa", isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.tempSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.windSpeedSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.distanceSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.precipSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.rcSetting.setLayoutManager(linearLayoutManager);

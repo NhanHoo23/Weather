@@ -42,12 +42,12 @@ public class TempActivity extends AppCompatActivity implements SettingAdapter.On
     private void setupView() {
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Nhiệt độ");
+        getSupportActionBar().setTitle(getString(R.string.tempSetting));
 
         boolean isDarkMode = AppManager.shared(this).getDarkModeStatus();
         list = new ArrayList<>();
-        list.add(new TempSettingModel("Độ C (℃)", isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
-        list.add(new TempSettingModel("Độ F (℉)", isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
+        list.add(new TempSettingModel(getString(R.string.tempCSetting), isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
+        list.add(new TempSettingModel(getString(R.string.tempFSetting), isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.rcSetting.setLayoutManager(linearLayoutManager);

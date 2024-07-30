@@ -1,9 +1,13 @@
 package fpoly.nhanhhph47395.weather.fragments;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -38,6 +42,7 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
     private FragmentSettingBinding binding;
     private SettingAdapter adapter;
     private List<SettingModel> list;
+    private BroadcastReceiver languageChangeReceiver;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -53,6 +58,15 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        languageChangeReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                updateLanguage();
+            }
+        };
+
+        IntentFilter filter = new IntentFilter("LANGUAGE_CHANGE");
+        requireActivity().registerReceiver(languageChangeReceiver, filter);
     }
 
     @Override
@@ -66,16 +80,22 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
         return binding.getRoot();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        requireActivity().unregisterReceiver(languageChangeReceiver);
+    }
+
     private void setupView() {
         boolean isDarkMode = AppManager.shared(getContext()).getDarkModeStatus();
         list = new ArrayList<>();
-        list.add(new SettingModel("Đơn vị",  isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
-        list.add(new SettingModel("Chế độ tối", isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, false));
-        list.add(new SettingModel("Ngôn ngữ", isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
-        list.add(new SettingModel("Quản lý thông báo", isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
-        list.add(new SettingModel("Truy cập vị trí", isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
-        list.add(new SettingModel("Vị trí mặc định", isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
-        list.add(new SettingModel("Chính sách quyền riêng tư", isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.unitSetting),  isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.darkModeSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, false));
+        list.add(new SettingModel(getString(R.string.languageSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.notiSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.locationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.defaultLocationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.polycySetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         binding.rcSetting.setLayoutManager(linearLayoutManager);
@@ -98,7 +118,8 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
             case 2://Chế độ tối
 
             case 3:
-                goToActivity(LanguageActivity.class);
+                Intent intent = new Intent(getActivity(), LanguageActivity.class);
+                startActivityForResult(intent, 1);
                 break;
             case 4://
             case 5://Vị trí mặc định
@@ -108,9 +129,22 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
         }
     }
 
-    private void updateUIForFragments() {
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.detach(this).attach(this).commitAllowingStateLoss();
+    private void updateLanguage() {
+        binding.tvTitle.setText(getString(R.string.setting));
+        boolean isDarkMode = AppManager.shared(getContext()).getDarkModeStatus();
+        list.clear();
+        list.add(new SettingModel(getString(R.string.unitSetting),  isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.darkModeSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, false));
+        list.add(new SettingModel(getString(R.string.languageSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.notiSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.locationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.defaultLocationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.polycySetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        binding.rcSetting.setLayoutManager(linearLayoutManager);
+        adapter = new SettingAdapter(getContext(), list, this, this);
+        binding.rcSetting.setAdapter(adapter);
     }
 
     @Override

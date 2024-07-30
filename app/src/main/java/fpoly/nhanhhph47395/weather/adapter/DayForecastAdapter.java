@@ -60,7 +60,7 @@ public class DayForecastAdapter extends RecyclerView.Adapter<DayForecastAdapter.
             if (calendarToday.get(Calendar.YEAR) == calendarProvided.get(Calendar.YEAR) &&
                     calendarToday.get(Calendar.MONTH) == calendarProvided.get(Calendar.MONTH) &&
                     calendarToday.get(Calendar.DAY_OF_MONTH) == calendarProvided.get(Calendar.DAY_OF_MONTH)) {
-                holder.tvDay.setText("Hôm nay");
+                holder.tvDay.setText(mContext.getString(R.string.today));
             } else {
                 int dayOfWeek = calendarProvided.get(Calendar.DAY_OF_WEEK);
                 DateFormatSymbols dateFormatSymbols = new DateFormatSymbols(Locale.getDefault());

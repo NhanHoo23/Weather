@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 import fpoly.nhanhhph47395.weather.R;
 
@@ -48,9 +49,9 @@ public class NoResultsView extends LinearLayout {
 
         // Tạo TextView
         tvMessage = new TextView(context);
-        tvMessage.setText("Không có kết quả");
+        tvMessage.setText(context.getString(R.string.noResult));
         tvMessage.setTextSize(22);
-        tvMessage.setTypeface(Typeface.SERIF, Typeface.BOLD);
+        tvMessage.setTypeface(ResourcesCompat.getFont(context, R.font.roboto_medium));
         tvMessage.setTextColor(Color.BLACK);
         LinearLayout.LayoutParams tvParams = new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT,

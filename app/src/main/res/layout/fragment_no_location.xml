@@ -36,7 +36,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Chưa có thêm thành phố nào"
+            android:text="@string/noCityAddedYet"
             android:fontFamily="sans-serif-medium"
             android:textSize="22sp"
             android:textAlignment="center"
@@ -51,7 +51,7 @@
             android:layout_marginTop="32dp"
             app:icon="@drawable/ic_current_location"
             app:iconGravity="textStart"
-            android:text="Chọn vị trí hiện tại" />
+            android:text="@string/selectCurrentLocation" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/btnSearchLocation"
@@ -61,7 +61,7 @@
             android:layout_marginTop="16dp"
             app:icon="@drawable/ic_location"
             app:iconGravity="textStart"
-            android:text="Tìm kiếm địa điểm" />
+            android:text="@string/SearchLocation" />
 
 
     </LinearLayout>

@@ -89,7 +89,7 @@ public class HomeFragment extends Fragment {
         List<WeatherResponse> arr = WeatherManager.shared().getLocationList();
         for (int i = 0; i < arr.size(); i++) {
             if(i == 0) {
-                popupMenu.getMenu().add(0, i, i, "Vị trí của tôi");
+                popupMenu.getMenu().add(0, i, i, getContext().getString(R.string.myLocation));
             } else {
                 popupMenu.getMenu().add(0, i, i, arr.get(i).location.name);
             }
@@ -106,7 +106,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void callAPI(int index) {
-        WeatherManager.shared().getWeatherBySpecificLocation(AppManager.shared(getContext()).loadLocationList().get(index), 10, "vi", new WeatherManager.WeatherCallback() {
+        boolean isEn = AppManager.shared(getContext()).getSelectedLanguageIndex() == 1;
+        WeatherManager.shared().getWeatherBySpecificLocation(AppManager.shared(getContext()).loadLocationList().get(index), 10, isEn ? "en" : "vi", new WeatherManager.WeatherCallback() {
             @Override
             public void onSuccess(WeatherResponse weatherResponse) {
                 hoursList = get24HourForecast(weatherResponse);
@@ -124,6 +125,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateUI(WeatherResponse weatherResponse) {
+        if (getContext() == null){return;}
+
         binding.progressBar.setVisibility(View.GONE);
         binding.nestedScrollView.setVisibility(View.VISIBLE);
 
@@ -132,8 +135,8 @@ public class HomeFragment extends Fragment {
         boolean isTempC = AppManager.shared(getContext()).getSelectedTempIndex() == 0;
         binding.tvTemp.setText((isTempC ? (int) weatherResponse.current.temp_c : (int) weatherResponse.current.temp_f) + "°");
         binding.tvStatus.setText(weatherResponse.current.condition.text);
-        binding.tvHighestTemp.setText("C:" + (isTempC ? (int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_c : (int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_f) + "°");
-        binding.tvLowestTemp.setText("T:" + (isTempC ? (int)weatherResponse.forecast.forecastday.get(0).day.mintemp_c : (int)weatherResponse.forecast.forecastday.get(0).day.mintemp_f) + "°");
+        binding.tvHighestTemp.setText(getContext().getString(R.string.highestTemp) + (isTempC ? (int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_c : (int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_f) + "°");
+        binding.tvLowestTemp.setText(getContext().getString(R.string.lowestTemp) + (isTempC ? (int)weatherResponse.forecast.forecastday.get(0).day.mintemp_c : (int)weatherResponse.forecast.forecastday.get(0).day.mintemp_f) + "°");
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         binding.rcHourForecast.setLayoutManager(linearLayoutManager);
@@ -150,16 +153,18 @@ public class HomeFragment extends Fragment {
 
         boolean isMm = AppManager.shared(getContext()).getSelectedPrecipitationIndex() == 0;
         binding.tvPrecip.setText((isMm ? (int)weatherResponse.current.precip_mm : (int)weatherResponse.current.precip_in) + (isMm ? " mm" : " in"));
-        binding.tvPrecipForecast.setText("Dự báo: " + (isMm ? (int)weatherResponse.forecast.forecastday.get(1).day.totalprecip_mm : (int)weatherResponse.forecast.forecastday.get(1).day.totalprecip_in) + (isMm ? "mm" : "in")  + " trong 24h tiếp theo" );
+        binding.tvPrecipForecast.setText(getContext().getString(R.string.forecast) + " " + (isMm ? (int)weatherResponse.forecast.forecastday.get(1).day.totalprecip_mm : (int)weatherResponse.forecast.forecastday.get(1).day.totalprecip_in) + (isMm ? "mm" : "in") + " " + getContext().getString(R.string.inNext24Hours) );
         binding.tvUV.setText(String.valueOf(weatherResponse.current.uv));
         WeatherEvaluate.UVLevel uvLevel = WeatherEvaluate.UVLevel.getUVLevel(weatherResponse.current.uv);
+        WeatherEvaluate.UVLevel.updateDisplayNames(getContext());
         binding.tvUVWarning.setText(uvLevel.getDisplayName());
         binding.tvUVAdvice.setText(uvLevel.getDetailedDescription());
         binding.tvHumidity.setText(weatherResponse.current.humidity + "%");
-        binding.tvHumidityEvaluate.setText("Điểm sương là " + (isTempC ? (int)weatherResponse.current.dewpoint_c : (int)weatherResponse.current.dewpoint_f) + "° ngay lúc này");
+        binding.tvHumidityEvaluate.setText(getContext().getString(R.string.humidityCond) + " " + (isTempC ? (int)weatherResponse.current.dewpoint_c : (int)weatherResponse.current.dewpoint_f)+ getContext().getString(R.string.humidityCond_2));
         boolean isKm = AppManager.shared(getContext()).getSelectedDistanceIndex() == 0;
         binding.tvVision.setText((isKm ? weatherResponse.current.vis_km : weatherResponse.current.vis_miles) + (isKm ? " km" : " mi"));
         WeatherEvaluate.VisibilityLevel visibilityLevel = WeatherEvaluate.VisibilityLevel.getVisibilityLevel(weatherResponse.current.vis_km);
+        WeatherEvaluate.VisibilityLevel.updateDisplayNames(getContext());
         binding.tvVisionEvaluate.setText(visibilityLevel.getDisplayName());
         binding.tvFeelLike.setText((isTempC ? (int)weatherResponse.current.feelslike_c : (int)weatherResponse.current.feelslike_f) + "°");
     }

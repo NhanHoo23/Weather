@@ -1,5 +1,7 @@
 package fpoly.nhanhhph47395.weather.screens;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -48,12 +50,12 @@ public class LanguageActivity extends AppCompatActivity implements SettingAdapte
     private void setupView() {
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Ngôn ngữ");
+        getSupportActionBar().setTitle(getString(R.string.languageSetting));
 
         boolean isDarkMode = AppManager.shared(this).getDarkModeStatus();
         list = new ArrayList<>();
-        list.add(new LanguageModel("Tiếng Việt", isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
-        list.add(new LanguageModel("Tiếng Anh", isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
+        list.add(new LanguageModel(getString(R.string.languageViSetting), isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
+        list.add(new LanguageModel(getString(R.string.languageEnSetting), isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.rcSetting.setLayoutManager(linearLayoutManager);
@@ -65,5 +67,11 @@ public class LanguageActivity extends AppCompatActivity implements SettingAdapte
     public void onItemClick(int position) {
         AppManager.shared(this).setSelectedLanguageIndex(position);
         adapter.notifyDataSetChanged();
+
+        AppManager.setLocale(this, AppManager.shared(this).getSelectedLanguageIndex() == 0 ? "vi":"en");
+        Intent intent = new Intent("LANGUAGE_CHANGE");
+        sendBroadcast(intent);
+
+        recreate();
     }
 }
