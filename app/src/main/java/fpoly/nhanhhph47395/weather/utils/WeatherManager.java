@@ -87,7 +87,8 @@ public class WeatherManager {
         for (String location : locationListString) {
             future = future.thenCompose(v -> { //thenCompose tạo chuỗi các tác vụ
                 CompletableFuture<Void> apiCallFuture = new CompletableFuture<>();
-                getWeatherBySpecificLocation(location, 10, "vi", new WeatherCallback() {
+                boolean isEn = AppManager.shared(context).getSelectedLanguageIndex() == 1;
+                getWeatherBySpecificLocation(location, 10, isEn ? "en":"vi", new WeatherCallback() {
                     @Override
                     public void onSuccess(WeatherResponse weatherResponse) {
                         synchronized (locationList) {

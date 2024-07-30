@@ -61,7 +61,7 @@ public class SplashActivity extends AppCompatActivity {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         new Handler().postDelayed(() -> {
-            if (!AppManager.shared(this).isFirstLogin()) {
+            if (AppManager.shared(this).isFirstLogin()) {
                 showNotificationPrompt();
             } else {
                 getLastKnownLocation()

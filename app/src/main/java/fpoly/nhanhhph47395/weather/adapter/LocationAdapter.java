@@ -64,7 +64,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
 
         if (position == 0) {
             if (AppManager.shared(mContext).isLocationEnabled()) {
-                holder.tvLocation.setText("Vị trí của tôi");
+                holder.tvLocation.setText(mContext.getString(R.string.myLocation));
                 holder.tvTime.setText(weatherResponse.location.name);
             } else {
                 holder.tvLocation.setText(weatherResponse.location.name);
@@ -86,8 +86,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         holder.tvCondition.setText(weatherResponse.current.condition.text);
         boolean isTempC = AppManager.shared(mContext).getSelectedTempIndex() == 0;
         holder.tvTemp.setText((isTempC ? (int)weatherResponse.current.temp_c : (int)weatherResponse.current.temp_f) + (isTempC ? "°C" : "°F"));
-        holder.tvHighestTemp.setText("C:" + (isTempC ? (int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_c : (int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_f) + "°");
-        holder.tvLowestTemp.setText("T:" + (isTempC ? (int)weatherResponse.forecast.forecastday.get(0).day.mintemp_c : (int)weatherResponse.forecast.forecastday.get(0).day.mintemp_f) + "°");
+        holder.tvHighestTemp.setText(mContext.getString(R.string.highestTemp) + (isTempC ? (int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_c : (int)weatherResponse.forecast.forecastday.get(0).day.maxtemp_f) + "°");
+        holder.tvLowestTemp.setText(mContext.getString(R.string.lowestTemp) + (isTempC ? (int)weatherResponse.forecast.forecastday.get(0).day.mintemp_c : (int)weatherResponse.forecast.forecastday.get(0).day.mintemp_f) + "°");
 
         if (position != 0) {
             if (showDeleteButton) {

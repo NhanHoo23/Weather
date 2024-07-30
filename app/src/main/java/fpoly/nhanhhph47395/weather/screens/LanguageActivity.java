@@ -3,6 +3,7 @@ package fpoly.nhanhhph47395.weather.screens;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
@@ -23,6 +24,7 @@ import fpoly.nhanhhph47395.weather.models.settingModels.LanguageModel;
 import fpoly.nhanhhph47395.weather.models.settingModels.SettingModel;
 import fpoly.nhanhhph47395.weather.models.settingModels.TempSettingModel;
 import fpoly.nhanhhph47395.weather.utils.AppManager;
+import fpoly.nhanhhph47395.weather.utils.WeatherManager;
 
 public class LanguageActivity extends AppCompatActivity implements SettingAdapter.OnClickListener {
     ActivityLanguageBinding binding;
@@ -72,6 +74,14 @@ public class LanguageActivity extends AppCompatActivity implements SettingAdapte
         Intent intent = new Intent("LANGUAGE_CHANGE");
         sendBroadcast(intent);
 
-        recreate();
+        WeatherManager.shared().locationList.clear();
+        WeatherManager.shared().fetchAndStoreWeatherData(this)
+                .thenAccept(aVoid -> {
+                    recreate();
+                })
+                .exceptionally(throwable -> {
+                    Log.e("Initialization Error", "Failed to fetch weather data", throwable);
+                    return null;
+                });
     }
 }

@@ -118,8 +118,7 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
             case 2://Chế độ tối
 
             case 3:
-                Intent intent = new Intent(getActivity(), LanguageActivity.class);
-                startActivityForResult(intent, 1);
+                goToActivity(LanguageActivity.class);
                 break;
             case 4://
             case 5://Vị trí mặc định
