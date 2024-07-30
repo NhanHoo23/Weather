@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.SearchFragment"
-    android:background="@color/mainBackgroundColor">
+    android:background="?attr/mainBackgroundColor">
 
     <TextView
         android:layout_width="wrap_content"
@@ -13,7 +13,7 @@
         android:text="Tìm kiếm"
         android:textSize="32sp"
         android:fontFamily="@font/roboto_bold"
-        android:textColor="@color/mainTextColor"
+        android:textColor="?attr/mainTextColor"
         android:layout_marginTop="62dp"
         android:layout_marginLeft="16dp"
         />
@@ -23,11 +23,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Chọn"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:paddingVertical="12dp"
         android:paddingLeft="12dp"
         android:fontFamily="sans-serif-medium"
-        android:textColor="@color/mainTextColor"
+        android:textColor="?attr/mainTextColor"
         android:layout_gravity="end"
         android:layout_marginTop="10dp"
         android:layout_marginRight="16dp"

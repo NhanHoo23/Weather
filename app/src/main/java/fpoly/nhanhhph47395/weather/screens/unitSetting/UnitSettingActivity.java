@@ -15,6 +15,7 @@ import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.adapter.SettingAdapter;
 import fpoly.nhanhhph47395.weather.databinding.ActivityUnitSettingBinding;
 import fpoly.nhanhhph47395.weather.models.settingModels.SettingModel;
+import fpoly.nhanhhph47395.weather.utils.AppManager;
 
 public class UnitSettingActivity extends AppCompatActivity implements SettingAdapter.OnClickListener {
     ActivityUnitSettingBinding binding;
@@ -44,11 +45,12 @@ public class UnitSettingActivity extends AppCompatActivity implements SettingAda
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Đơn vị");
 
+        boolean isDarkMode = AppManager.shared(this).getDarkModeStatus();
         list = new ArrayList<>();
-        list.add(new SettingModel("Nhiệt độ", R.drawable.ic_arrow, true));
-        list.add(new SettingModel("Tốc độ gió", R.drawable.ic_arrow, true));
-        list.add(new SettingModel("Khoảng cách", R.drawable.ic_arrow, true));
-        list.add(new SettingModel("Lượng mưa", R.drawable.ic_arrow, true));
+        list.add(new SettingModel("Nhiệt độ", isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel("Tốc độ gió", isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel("Khoảng cách", isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel("Lượng mưa", isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.rcSetting.setLayoutManager(linearLayoutManager);

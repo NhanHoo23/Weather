@@ -1,9 +1,11 @@
 package fpoly.nhanhhph47395.weather.screens;
 
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -34,6 +36,11 @@ public class MainActivity extends AppCompatActivity implements LocationAdapter.O
             replaceFragment(new NoLocationFragment());
         }
 
+        if (AppManager.shared(this).selectedFragment == 2) {
+            replaceFragment(new SettingFragment());
+            flag = R.id.nav_setting;
+        }
+
         binding.nvView.setOnItemSelectedListener(menuItem -> {
             if (menuItem.getItemId() == R.id.nav_home && flag != R.id.nav_home) {
                 if (AppManager.shared(this).isLocationEnabled()) {
@@ -42,15 +49,26 @@ public class MainActivity extends AppCompatActivity implements LocationAdapter.O
                     replaceFragment(new NoLocationFragment());
                 }
                 flag = R.id.nav_home;
+                AppManager.shared(this).selectedFragment = 0;
             } else if (menuItem.getItemId() == R.id.nav_search && flag != R.id.nav_search) {
                 replaceFragment(new SearchFragment());
                 flag = R.id.nav_search;
+                AppManager.shared(this).selectedFragment = 1;
             } else if (menuItem.getItemId() == R.id.nav_setting && flag != R.id.nav_setting) {
                 replaceFragment(new SettingFragment());
                 flag = R.id.nav_setting;
+                AppManager.shared(this).selectedFragment = 2;
             }
             return true;
         });
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (!AppManager.shared(this).isFirstLogin()) {
+            AppManager.applyTheme(AppManager.shared(this).getDarkModeStatus());
+        }
     }
 
     private void replaceFragment(Fragment fragment) {

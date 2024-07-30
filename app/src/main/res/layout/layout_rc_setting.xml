@@ -20,7 +20,7 @@
             android:text="Đơn vị"
             android:fontFamily="@font/roboto_medium"
             android:textSize="12sp"
-            android:textColor="@color/mainTextColor" />
+            android:textColor="?attr/mainTextColor" />
 
         <Switch
             android:id="@+id/btnSwitch"

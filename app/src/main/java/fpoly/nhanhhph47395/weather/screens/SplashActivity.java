@@ -3,6 +3,7 @@ package fpoly.nhanhhph47395.weather.screens;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,6 +43,11 @@ public class SplashActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash);
 
+        if (AppManager.shared(this).isFirstLogin()) {
+            AppManager.shared(this).setDarkModeStatusBasedOnDevice(this);
+        }
+        AppManager.applyTheme(AppManager.shared(this).getDarkModeStatus());
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         new Handler().postDelayed(() -> {
@@ -72,6 +78,14 @@ public class SplashActivity extends AppCompatActivity {
         super.onResume();
         if (notificationPromptShown) {
             checkNotificationStatus();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (!AppManager.shared(this).isFirstLogin()) {
+            AppManager.applyTheme(AppManager.shared(this).getDarkModeStatus());
         }
     }
 
@@ -154,7 +168,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void goToMainActivity() {
-        AppManager.shared(this).setFirstLogin(true);
+        AppManager.shared(this).setFirstLogin(false);
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

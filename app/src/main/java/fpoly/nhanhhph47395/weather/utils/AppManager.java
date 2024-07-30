@@ -1,7 +1,10 @@
 package fpoly.nhanhhph47395.weather.utils;
 
+import android.app.UiModeManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -18,6 +21,7 @@ public class AppManager {
     private SharedPreferences sharedPreferences;
 
     public final int REQUEST_LOCATION_PERMISSION = 1;
+    public int selectedFragment = 0;
 
 
     private AppManager(Context context) {
@@ -38,7 +42,14 @@ public class AppManager {
     }
 
     public boolean isFirstLogin() {
-        return sharedPreferences.getBoolean("isFirstLogin", false);
+        return sharedPreferences.getBoolean("isFirstLogin", true);
+    }
+
+    public void setDarkModeStatusBasedOnDevice(Context context) {
+        UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
+        int currentMode = uiModeManager.getNightMode();
+        boolean isDarkMode = (currentMode == UiModeManager.MODE_NIGHT_YES);
+        instance.setDarkModeStatus(isDarkMode);
     }
 
 
@@ -155,6 +166,25 @@ public class AppManager {
     public int getSelectedDefaultLocationIndex() {
         return sharedPreferences.getInt("selectedDefaultLocationIndex", 0);
     }
+
+    public void setDarkModeStatus(boolean isDarkMode) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("darkModeStatus", isDarkMode);
+        editor.apply();
+    }
+
+    public boolean getDarkModeStatus() {
+        return sharedPreferences.getBoolean("darkModeStatus", false);
+    }
+
+    public static void applyTheme(boolean isDarkMode) {
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+    }
+
 }
 
 

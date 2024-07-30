@@ -50,14 +50,15 @@ public class DefaultLocationActivity extends AppCompatActivity implements Settin
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Ngôn ngữ");
 
+        boolean isDarkMode = AppManager.shared(this).getDarkModeStatus();
         list = new ArrayList<>();
         List<String> locationList = AppManager.shared(this).loadLocationList();
         for (int i = 0; i < locationList.size(); i++) {
             String location = locationList.get(i);
             if (i == 0) {
-                list.add(new DefaultLocationModel("Vị trí của tôi", R.drawable.ic_check));
+                list.add(new DefaultLocationModel("Vị trí của tôi", isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
             } else {
-                list.add(new DefaultLocationModel(location, R.drawable.ic_check));
+                list.add(new DefaultLocationModel(location, isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
             }
         }
 

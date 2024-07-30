@@ -5,16 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingHorizontal="16dp"
-    tools:context=".fragments.SettingFragment">
+    tools:context=".fragments.SettingFragment"
+    android:background="?attr/mainBackgroundColor">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_marginTop="62dp"
         android:fontFamily="@font/roboto_bold"
         android:text="Cài đặt"
-        android:textColor="@color/mainTextColor"
+        android:textColor="?attr/mainTextColor"
         android:textSize="32sp" />
 
     <androidx.recyclerview.widget.RecyclerView

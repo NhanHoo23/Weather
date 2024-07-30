@@ -44,9 +44,10 @@ public class PrecipitationActivity extends AppCompatActivity implements SettingA
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Lượng mưa");
 
+        boolean isDarkMode = AppManager.shared(this).getDarkModeStatus();
         list = new ArrayList<>();
-        list.add(new PrecipitationSettingModel("mm", R.drawable.ic_check));
-        list.add(new PrecipitationSettingModel("inch", R.drawable.ic_check));
+        list.add(new PrecipitationSettingModel("mm", isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
+        list.add(new PrecipitationSettingModel("inch", isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.rcSetting.setLayoutManager(linearLayoutManager);

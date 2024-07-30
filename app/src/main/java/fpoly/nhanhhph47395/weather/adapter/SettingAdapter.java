@@ -26,20 +26,28 @@ import fpoly.nhanhhph47395.weather.utils.AppManager;
 public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.SettingViewHolder> {
     private Context mContext;
     private List<SettingModel> list;
-    private OnClickListener listener;
+    private OnClickListener onClickListener;
+    private OnSwitchListener onSwitchListener;
     private boolean isDarkMode = false;
 
-    public SettingAdapter(Context mContext, List<SettingModel> list, OnClickListener listener) {
+    public SettingAdapter(Context mContext, List<SettingModel> list, OnClickListener onClickListener, OnSwitchListener onSwitchListener) {
         this.mContext = mContext;
         this.list = list;
-        this.listener = listener;
+        this.onClickListener = onClickListener;
+        this.onSwitchListener = onSwitchListener;
+    }
+
+    public SettingAdapter(Context mContext, List<SettingModel> list, OnClickListener onClickListener) {
+        this.mContext = mContext;
+        this.list = list;
+        this.onClickListener = onClickListener;
     }
 
     @NonNull
     @Override
     public SettingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_rc_setting, parent, false);
-        return new SettingViewHolder(view, listener);
+        return new SettingViewHolder(view, onClickListener);
     }
 
     @Override
@@ -71,6 +79,14 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.SettingV
                 updateIcon(holder.imgIcon, AppManager.shared(mContext).getSelectedDefaultLocationIndex() == position);
             }
         }
+
+        isDarkMode = AppManager.shared(mContext).getDarkModeStatus();
+        holder.btnSwitch.setChecked(isDarkMode);
+
+        holder.btnSwitch.setOnClickListener(v -> {
+            isDarkMode = !isDarkMode;
+            onSwitchListener.onClick(isDarkMode);
+        });
     }
 
     @Override
@@ -107,8 +123,8 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.SettingV
         void onItemClick(int position);
     }
 
-    public interface OnSwitch {
-
+    public interface OnSwitchListener {
+        void onClick(boolean isDarkMode);
     }
 
 }

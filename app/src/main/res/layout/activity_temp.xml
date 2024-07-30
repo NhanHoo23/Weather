@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".screens.unitSetting.TempActivity">
+    tools:context=".screens.unitSetting.TempActivity"
+    android:background="?attr/mainBackgroundColor">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

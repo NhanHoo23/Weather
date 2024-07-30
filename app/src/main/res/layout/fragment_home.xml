@@ -85,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textColor="#fff"
-                    android:textSize="32dp"
+                    android:textSize="32sp"
                     android:fontFamily="@font/roboto_medium"
                     android:shadowColor="#40000000"
                     android:shadowDx="2"
@@ -111,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textColor="#fff"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:textStyle="normal"
                     android:shadowColor="#40000000"
                     android:shadowDx="2"
@@ -129,7 +129,7 @@
                         android:layout_height="wrap_content"
                         android:text=""
                         android:textColor="#fff"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:textStyle="normal"
                         android:shadowColor="#40000000"
                         android:shadowDx="2"
@@ -143,7 +143,7 @@
                         android:layout_marginLeft="20dp"
                         android:text=""
                         android:textColor="#fff"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:textStyle="normal"
                         android:shadowColor="#40000000"
                         android:shadowDx="2"
@@ -188,7 +188,7 @@
                             android:textAllCaps="true"
                             android:layout_marginLeft="8dp"
                             android:textColor="@color/forecastTitle"
-                            android:textSize="14dp"
+                            android:textSize="14sp"
                             android:textStyle="normal"/>
                     </LinearLayout>
 
@@ -242,7 +242,7 @@
                             android:textAllCaps="true"
                             android:layout_marginLeft="8dp"
                             android:textColor="@color/forecastTitle"
-                            android:textSize="14dp"
+                            android:textSize="14sp"
                             android:textStyle="normal"/>
                     </LinearLayout>
 
@@ -300,7 +300,7 @@
                                 android:textAllCaps="true"
                                 android:layout_marginLeft="8dp"
                                 android:textColor="@color/forecastTitle"
-                                android:textSize="14dp"
+                                android:textSize="14sp"
                                 android:textStyle="normal"/>
                         </LinearLayout>
 
@@ -348,7 +348,7 @@
                                 android:textAllCaps="true"
                                 android:layout_marginLeft="8dp"
                                 android:textColor="@color/forecastTitle"
-                                android:textSize="14dp"
+                                android:textSize="14sp"
                                 android:textStyle="normal"/>
                         </LinearLayout>
 
@@ -368,14 +368,14 @@
                                     android:layout_height="wrap_content"
                                     android:text="34mm"
                                     android:textColor="#fff"
-                                    android:textSize="20dp"/>
+                                    android:textSize="20sp"/>
 
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="trong 24 giờ qua"
                                     android:textColor="#fff"
-                                    android:textSize="16dp"
+                                    android:textSize="16sp"
                                     android:textStyle="bold"/>
                             </LinearLayout>
 
@@ -386,7 +386,7 @@
                                 android:layout_weight="1"
                                 android:text="Dự báo: 24mm trong 24 giờ tiếp theo"
                                 android:textColor="#fff"
-                                android:textSize="12dp"
+                                android:textSize="12sp"
                                 android:textStyle="normal"/>
                         </LinearLayout>
 
@@ -439,7 +439,7 @@
                                 android:textAllCaps="true"
                                 android:layout_marginLeft="8dp"
                                 android:textColor="@color/forecastTitle"
-                                android:textSize="14dp"
+                                android:textSize="14sp"
                                 android:textStyle="normal"/>
                         </LinearLayout>
 
@@ -459,7 +459,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="3"
                                     android:textColor="#fff"
-                                    android:textSize="20dp"/>
+                                    android:textSize="20sp"/>
 
                                 <TextView
                                     android:id="@+id/tvUVWarning"
@@ -467,7 +467,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="Trung bình"
                                     android:textColor="#fff"
-                                    android:textSize="16dp"
+                                    android:textSize="16sp"
                                     android:textStyle="bold"/>
                             </LinearLayout>
 
@@ -478,7 +478,7 @@
                                 android:layout_weight="1"
                                 android:text="Tránh nắng đến 17:00"
                                 android:textColor="#fff"
-                                android:textSize="12dp"
+                                android:textSize="12sp"
                                 android:textStyle="normal"/>
                         </LinearLayout>
 
@@ -523,7 +523,7 @@
                                 android:textAllCaps="true"
                                 android:layout_marginLeft="8dp"
                                 android:textColor="@color/forecastTitle"
-                                android:textSize="14dp"
+                                android:textSize="14sp"
                                 android:textStyle="normal"/>
                         </LinearLayout>
 
@@ -543,7 +543,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="72%"
                                     android:textColor="#fff"
-                                    android:textSize="20dp"/>
+                                    android:textSize="20sp"/>
 
                             </LinearLayout>
 
@@ -554,7 +554,7 @@
                                 android:layout_weight="1"
                                 android:text="Điểm sương là 26 ngay lúc này"
                                 android:textColor="#fff"
-                                android:textSize="12dp"
+                                android:textSize="12sp"
                                 android:textStyle="normal"/>
                         </LinearLayout>
 
@@ -608,7 +608,7 @@
                                 android:textAllCaps="true"
                                 android:layout_marginLeft="8dp"
                                 android:textColor="@color/forecastTitle"
-                                android:textSize="14dp"
+                                android:textSize="14sp"
                                 android:textStyle="normal"/>
                         </LinearLayout>
 
@@ -628,7 +628,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="18 km"
                                     android:textColor="#fff"
-                                    android:textSize="20dp"/>
+                                    android:textSize="20sp"/>
 
                             </LinearLayout>
 
@@ -639,7 +639,7 @@
                                 android:layout_weight="1"
                                 android:text="Hoàn toàn rõ ngay lúc này"
                                 android:textColor="#fff"
-                                android:textSize="12dp"
+                                android:textSize="12sp"
                                 android:textStyle="normal"/>
                         </LinearLayout>
 
@@ -684,7 +684,7 @@
                                 android:textAllCaps="true"
                                 android:layout_marginLeft="8dp"
                                 android:textColor="@color/forecastTitle"
-                                android:textSize="14dp"
+                                android:textSize="14sp"
                                 android:textStyle="normal"/>
                         </LinearLayout>
 
@@ -704,7 +704,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="33"
                                     android:textColor="#fff"
-                                    android:textSize="20dp"/>
+                                    android:textSize="20sp"/>
 
                             </LinearLayout>
 
@@ -715,7 +715,7 @@
                                 android:layout_weight="1"
                                 android:text="Độ ẩm đang khiến bạn thấy ấm hơn"
                                 android:textColor="#fff"
-                                android:textSize="12dp"
+                                android:textSize="12sp"
                                 android:textStyle="normal"/>
                         </LinearLayout>
 

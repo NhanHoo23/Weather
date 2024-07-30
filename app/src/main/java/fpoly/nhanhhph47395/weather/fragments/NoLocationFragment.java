@@ -54,6 +54,9 @@ public class NoLocationFragment extends Fragment {
         binding = FragmentNoLocationBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        boolean isDarkMode = AppManager.shared(getContext()).getDarkModeStatus();
+        binding.imgMap.setImageResource(isDarkMode ? R.drawable.img_map_dark : R.drawable.img_map_light);
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         binding.btnCurrentLocation.setOnClickListener(v -> {
@@ -90,6 +93,7 @@ public class NoLocationFragment extends Fragment {
                             WeatherManager.shared().locationList.clear();
                             WeatherManager.shared().fetchAndStoreWeatherData(getContext())
                                     .thenAccept(aVoid -> {
+                                        AppManager.shared(getContext()).setLocationEnabled(true);
                                         replaceFragment(new HomeFragment());
                                     })
                                     .exceptionally(throwable -> {

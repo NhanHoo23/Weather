@@ -50,9 +50,10 @@ public class LanguageActivity extends AppCompatActivity implements SettingAdapte
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Ngôn ngữ");
 
+        boolean isDarkMode = AppManager.shared(this).getDarkModeStatus();
         list = new ArrayList<>();
-        list.add(new LanguageModel("Tiếng Việt", R.drawable.ic_check));
-        list.add(new LanguageModel("Tiếng Anh", R.drawable.ic_check));
+        list.add(new LanguageModel("Tiếng Việt", isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
+        list.add(new LanguageModel("Tiếng Anh", isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.rcSetting.setLayoutManager(linearLayoutManager);

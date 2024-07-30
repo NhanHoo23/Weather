@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:text="Hôm nay"
             android:textColor="#fff"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textStyle="normal"/>
 
         <LinearLayout
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:text="💧87%"
                 android:textColor="#CBFFFFFF"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 android:textStyle="normal"/>
 
         </LinearLayout>
@@ -58,7 +58,7 @@
             android:textAlignment="textEnd"
             android:text="35°/35°"
             android:textColor="#fff"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textStyle="normal"/>
 
     </LinearLayout>

@@ -44,9 +44,10 @@ public class DistanceActivity extends AppCompatActivity implements SettingAdapte
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Khoảng cách");
 
+        boolean isDarkMode = AppManager.shared(this).getDarkModeStatus();
         list = new ArrayList<>();
-        list.add(new DistanceSettingModel("Kilomet (km)", R.drawable.ic_check));
-        list.add(new DistanceSettingModel("Dặm (mi)", R.drawable.ic_check));
+        list.add(new DistanceSettingModel("Kilomet (km)", isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
+        list.add(new DistanceSettingModel("Dặm (mi)", isDarkMode ? R.drawable.ic_check_dark : R.drawable.ic_check));
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.rcSetting.setLayoutManager(linearLayoutManager);
