@@ -63,7 +63,8 @@ public class HomeFragment extends Fragment {
 
             callAPI(locationIndex);
         } else {
-            callAPI(0);
+            int defaultLocation = AppManager.shared(getContext()).getSelectedDefaultLocationIndex();
+            callAPI(defaultLocation);
         }
 
         return view;

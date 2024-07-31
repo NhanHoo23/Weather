@@ -62,6 +62,17 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.SettingV
         if (item.getClass() == SettingModel.class) {
             holder.btnSwitch.setVisibility(item.showTrailingIcon ? View.INVISIBLE : View.VISIBLE);
             holder.imgIcon.setVisibility(item.showTrailingIcon ? View.VISIBLE : View.GONE);
+
+//            if (position == 4) {
+//                holder.tvAccessLocation.setVisibility(View.VISIBLE);
+//                if (AppManager.shared(mContext).isLocationEnabled()) {
+//                    String allow = mContext.getString(R.string.allow);
+//                    holder.tvAccessLocation.setText(allow);
+//                } else {
+//                    String deny = mContext.getString(R.string.deny);
+//                    holder.tvAccessLocation.setText(deny);
+//                }
+//            }
         } else {
             holder.btnSwitch.setVisibility(View.INVISIBLE);
 
@@ -95,7 +106,7 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.SettingV
     }
 
     public static class SettingViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvSettingName;
+        private TextView tvSettingName, tvAccessLocation;
         private ImageView imgIcon;
         private Switch btnSwitch;
         public SettingViewHolder(@NonNull View itemView, final OnClickListener listener) {
@@ -104,6 +115,7 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.SettingV
             tvSettingName = itemView.findViewById(R.id.tvSettingName);
             imgIcon = itemView.findViewById(R.id.imgIcon);
             btnSwitch = itemView.findViewById(R.id.btnSwitch);
+            tvAccessLocation = itemView.findViewById(R.id.tvAccessLocation);
 
             itemView.setOnClickListener(v -> {
                 listener.onItemClick(getBindingAdapterPosition());

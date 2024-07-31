@@ -1,13 +1,19 @@
 package fpoly.nhanhhph47395.weather.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -15,6 +21,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,6 +94,21 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
         requireActivity().unregisterReceiver(languageChangeReceiver);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == AppManager.shared(getContext()).REQUEST_LOCATION_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                AppManager.shared(getContext()).setLocationEnabled(true);
+                adapter.notifyDataSetChanged();
+            } else {
+                AppManager.shared(getContext()).setLocationEnabled(false);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
     private void setupView() {
         boolean isDarkMode = AppManager.shared(getContext()).getDarkModeStatus();
         list = new ArrayList<>();
@@ -94,7 +116,7 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
         list.add(new SettingModel(getString(R.string.darkModeSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, false));
         list.add(new SettingModel(getString(R.string.languageSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
         list.add(new SettingModel(getString(R.string.notiSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
-        list.add(new SettingModel(getString(R.string.locationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+//        list.add(new SettingModel(getString(R.string.locationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
         list.add(new SettingModel(getString(R.string.defaultLocationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
         list.add(new SettingModel(getString(R.string.polycySetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
 
@@ -122,12 +144,15 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
             case 3://Quản lý thông báo
                 goToActivity(NotiManagementActivity.class);
                 break;
+//            case 4://requestLocationPermission
+//                requestLocationPermission();
+//                break;
             case 4://Vị trí mặc định
-                break;
-            case 5:
                 goToActivity(DefaultLocationActivity.class);
                 break;
-            case 6:
+            case 5:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.weatherapi.com/privacy.aspx"));
+                startActivity(browserIntent);
                 break;
         }
     }
@@ -140,7 +165,7 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
         list.add(new SettingModel(getString(R.string.darkModeSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, false));
         list.add(new SettingModel(getString(R.string.languageSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
         list.add(new SettingModel(getString(R.string.notiSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
-        list.add(new SettingModel(getString(R.string.locationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+//        list.add(new SettingModel(getString(R.string.locationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
         list.add(new SettingModel(getString(R.string.defaultLocationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
         list.add(new SettingModel(getString(R.string.polycySetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
 
@@ -148,6 +173,12 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
         binding.rcSetting.setLayoutManager(linearLayoutManager);
         adapter = new SettingAdapter(getContext(), list, this, this);
         binding.rcSetting.setAdapter(adapter);
+    }
+
+    private void requestLocationPermission() {
+        ActivityCompat.requestPermissions(getActivity(),
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                AppManager.shared(getContext()).REQUEST_LOCATION_PERMISSION);
     }
 
     @Override

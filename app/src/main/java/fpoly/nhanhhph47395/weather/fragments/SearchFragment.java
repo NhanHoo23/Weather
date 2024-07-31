@@ -214,6 +214,7 @@ public class SearchFragment extends Fragment implements SearchTextAdapter.Search
         List<String> listLocationString = AppManager.shared(getContext()).loadLocationList();
         listLocationString.remove(position);
         AppManager.shared(getContext()).saveLocationList(listLocationString);
+        AppManager.shared(getContext()).setSelectedDefaultLocationIndex(0);
         WeatherManager.shared().locationList.remove(position);
         locationAdapter.toggleDeleteButton();
     }
