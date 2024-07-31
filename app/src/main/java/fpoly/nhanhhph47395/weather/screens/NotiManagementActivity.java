@@ -83,13 +83,10 @@ public class NotiManagementActivity extends AppCompatActivity {
                 if (isEnable) {
                     int dayHour = binding.timePickerDay.getHour();
                     int dayMinute = binding.timePickerDay.getMinute();
-                    AppManager.shared(this).saveTime(dayHour, dayMinute, "dayTime");
-                    setDailyNotification(dayHour, dayMinute);
-
                     int nightHour = binding.timePickerNight.getHour();
                     int nightMinute = binding.timePickerNight.getMinute();
-                    AppManager.shared(this).saveTime(nightHour, nightMinute, "nightTime");
-                    setDailyNotification(nightHour, nightMinute);
+
+                    setupNoti(dayHour, dayMinute, nightHour, nightMinute);
                 }
             } else {
                 gotoSetting = true;
@@ -102,17 +99,25 @@ public class NotiManagementActivity extends AppCompatActivity {
 
         binding.timePickerDay.setOnTimeChangedListener((view, hourOfDay, minute) -> {
             if (isEnable) {
-                Toast.makeText(this, "set time ne", Toast.LENGTH_SHORT).show();
+                int dayHour = binding.timePickerDay.getHour();
+                int dayMinute = binding.timePickerDay.getMinute();
+                int nightHour = binding.timePickerNight.getHour();
+                int nightMinute = binding.timePickerNight.getMinute();
+
                 AppManager.shared(this).saveTime(hourOfDay, minute, "dayTime");
-                setDailyNotification(hourOfDay, minute);
+                setupNoti(dayHour, dayMinute, nightHour, nightMinute);
             }
         });
 
         binding.timePickerNight.setOnTimeChangedListener((view, hourOfDay, minute) -> {
             if (isEnable) {
-                Toast.makeText(this, "set time ne", Toast.LENGTH_SHORT).show();
+                int dayHour = binding.timePickerDay.getHour();
+                int dayMinute = binding.timePickerDay.getMinute();
+                int nightHour = binding.timePickerNight.getHour();
+                int nightMinute = binding.timePickerNight.getMinute();
+
                 AppManager.shared(this).saveTime(hourOfDay, minute, "nightTime");
-                setDailyNotification(hourOfDay, minute);
+                setupNoti(dayHour, dayMinute, nightHour, nightMinute);
             }
         });
     }
@@ -130,10 +135,11 @@ public class NotiManagementActivity extends AppCompatActivity {
         }
     }
 
-    private void setDailyNotification(int hourOfDay, int minute) {
+    private void setDailyNotification(int hourOfDay, int minute, int requestCode) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, NotificationReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_MUTABLE); // hoặc PendingIntent.FLAG_IMMUTABLE
+        intent.putExtra("notification_id", requestCode);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_MUTABLE); // hoặc PendingIntent.FLAG_IMMUTABLE
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -147,5 +153,13 @@ public class NotiManagementActivity extends AppCompatActivity {
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pendingIntent);
+    }
+
+    private void setupNoti(int dayHour, int dayMinute, int nightHour, int nightMinute) {
+        AppManager.shared(this).saveTime(dayHour, dayMinute, "dayTime");
+        setDailyNotification(dayHour, dayMinute, 0);
+
+        AppManager.shared(this).saveTime(nightHour, nightMinute, "nightTime");
+        setDailyNotification(nightHour, nightMinute, 1);
     }
 }

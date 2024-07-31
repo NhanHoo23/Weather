@@ -59,7 +59,8 @@
     <string name="notiSetting">Notification management</string>
     <string name="receiveWeatherNotifications">Receive weather notifications</string>
     <string name="receiveWeatherNotificationsDes">Daily weather announcements will be broadcast once during the day, and once at night</string>
-    <string name="notiTitle">Tomorrow in </string>
+    <string name="notiTitleTomorrow">Tomorrow in </string>
+    <string name="notiTitleToday">Today in </string>
     <string name="locationSetting">Location access</string>
     <string name="allow">Allow</string>
     <string name="deny">Deny</string>
