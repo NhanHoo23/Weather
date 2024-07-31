@@ -25,12 +25,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import fpoly.nhanhhph47395.weather.R;
-import fpoly.nhanhhph47395.weather.fragments.HomeFragment;
 import fpoly.nhanhhph47395.weather.utils.AppManager;
 import fpoly.nhanhhph47395.weather.utils.WeatherManager;
 

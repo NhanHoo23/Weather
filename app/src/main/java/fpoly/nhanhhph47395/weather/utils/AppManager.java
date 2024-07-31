@@ -14,10 +14,10 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Locale;
 
+import fpoly.nhanhhph47395.weather.models.WeatherResponse;
+
 public class AppManager {
     private static final String PREFS_NAME = "app_prefs";
-    private static final String KEY_LOCATION_ENABLED = "location_enabled";
-    private static final String KEY_NOTIFICATION_ENABLED = "notification_enabled";
 
     private static AppManager instance;
     private SharedPreferences sharedPreferences;
@@ -54,27 +54,50 @@ public class AppManager {
         instance.setDarkModeStatus(isDarkMode);
     }
 
+    public void saveWeatherResponse(WeatherResponse weatherResponse) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String json = new Gson().toJson(weatherResponse);
+        editor.putString("weatherResponse", json);
+        editor.apply();
+    }
 
+    public WeatherResponse getWeatherResponse() {
+        String json = sharedPreferences.getString("weatherResponse", null);
+        return new Gson().fromJson(json, WeatherResponse.class);
+    }
 
     //Setting
     public void setLocationEnabled(boolean enabled) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(KEY_LOCATION_ENABLED, enabled);
+        editor.putBoolean("locationEnabled", enabled);
         editor.apply();
     }
 
     public boolean isLocationEnabled() {
-        return sharedPreferences.getBoolean(KEY_LOCATION_ENABLED, false);
+        return sharedPreferences.getBoolean("locationEnabled", false);
     }
 
     public void setNotificationEnabled(boolean enabled) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(KEY_NOTIFICATION_ENABLED, enabled);
+        editor.putBoolean("notificationEnabled", enabled);
         editor.apply();
     }
 
     public boolean isNotificationEnabled() {
-        return sharedPreferences.getBoolean(KEY_NOTIFICATION_ENABLED, false);
+        return sharedPreferences.getBoolean("notificationEnabled", false);
+    }
+
+    public void saveTime(int hourOfDay, int minute, String key) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(key + "_hour", hourOfDay);
+        editor.putInt(key + "_minute", minute);
+        editor.apply();
+    }
+
+    public int[] getTime(String key) {
+        int hour = sharedPreferences.getInt(key + "_hour", 0);
+        int minute = sharedPreferences.getInt(key + "_minute", 0);
+        return new int[]{hour, minute};
     }
 
     public void setDefaultLongitude(float longitude) {

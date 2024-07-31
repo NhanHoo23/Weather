@@ -30,6 +30,7 @@ import fpoly.nhanhhph47395.weather.databinding.FragmentSettingBinding;
 import fpoly.nhanhhph47395.weather.models.settingModels.SettingModel;
 import fpoly.nhanhhph47395.weather.screens.DefaultLocationActivity;
 import fpoly.nhanhhph47395.weather.screens.LanguageActivity;
+import fpoly.nhanhhph47395.weather.screens.NotiManagementActivity;
 import fpoly.nhanhhph47395.weather.screens.unitSetting.UnitSettingActivity;
 import fpoly.nhanhhph47395.weather.utils.AppManager;
 
@@ -115,16 +116,19 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
             case 0: //Đơn vị
                 goToActivity(UnitSettingActivity.class);
                 break;
-            case 2://Chế độ tối
-
-            case 3:
+            case 2:
                 goToActivity(LanguageActivity.class);
                 break;
-            case 4://
-            case 5://Vị trí mặc định
+            case 3://Quản lý thông báo
+                goToActivity(NotiManagementActivity.class);
+                break;
+            case 4://Vị trí mặc định
+                break;
+            case 5:
                 goToActivity(DefaultLocationActivity.class);
                 break;
             case 6:
+                break;
         }
     }
 

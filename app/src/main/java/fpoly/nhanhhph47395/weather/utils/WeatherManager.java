@@ -84,22 +84,24 @@ public class WeatherManager {
         List<String> locationListString = AppManager.shared(context).loadLocationList();
         CompletableFuture<Void> future = CompletableFuture.completedFuture(null);
 
-        for (String location : locationListString) {
+        for (int i = 0; i < locationListString.size(); i++) {
+            final int index = i;
             future = future.thenCompose(v -> { //thenCompose tạo chuỗi các tác vụ
                 CompletableFuture<Void> apiCallFuture = new CompletableFuture<>();
                 boolean isEn = AppManager.shared(context).getSelectedLanguageIndex() == 1;
-                getWeatherBySpecificLocation(location, 10, isEn ? "en":"vi", new WeatherCallback() {
+                getWeatherBySpecificLocation(locationListString.get(index), 10, isEn ? "en":"vi", new WeatherCallback() {
                     @Override
                     public void onSuccess(WeatherResponse weatherResponse) {
                         synchronized (locationList) {
                             locationList.add(weatherResponse);
+                            if (index == 0) {AppManager.shared(context).saveWeatherResponse(weatherResponse);}
                         }
                         apiCallFuture.complete(null);
                     }
 
                     @Override
                     public void onFailure(Throwable throwable) {
-                        Log.d("onFailure", "onFailure: " + location + "-" + throwable.getLocalizedMessage());
+                        Log.d("onFailure", "onFailure: " + locationListString.get(index) + "-" + throwable.getLocalizedMessage());
                         apiCallFuture.completeExceptionally(throwable);
                     }
                 });

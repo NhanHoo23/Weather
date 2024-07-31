@@ -57,7 +57,7 @@ public class SearchTextAdapter extends RecyclerView.Adapter<SearchTextAdapter.Se
     public SearchTextViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View mView = LayoutInflater.from(mContext).inflate(android.R.layout.simple_list_item_1, parent, false);
 
-        return new SearchTextViewHolder(mView, listener);
+        return new SearchTextViewHolder(mView, listener, mContext);
     }
 
     @Override
@@ -83,14 +83,14 @@ public class SearchTextAdapter extends RecyclerView.Adapter<SearchTextAdapter.Se
     public static class SearchTextViewHolder extends RecyclerView.ViewHolder {
         private TextView tvSearch;
 
-        public SearchTextViewHolder(@NonNull View itemView, final SearchTextAdapterClickListener listener) {
+        public SearchTextViewHolder(@NonNull View itemView, final SearchTextAdapterClickListener listener, Context context) {
             super(itemView);
 
             tvSearch = itemView.findViewById(android.R.id.text1);
             tvSearch.setSingleLine();
             tvSearch.setTypeface(Typeface.SANS_SERIF, Typeface.NORMAL);
             tvSearch.setEllipsize(TextUtils.TruncateAt.END); // Tạo dấu 3 chấm
-            tvSearch.setTextColor(Color.parseColor("#000000"));
+            tvSearch.setTextColor(context.getResources().getColor(R.color.mainTextColor));
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {

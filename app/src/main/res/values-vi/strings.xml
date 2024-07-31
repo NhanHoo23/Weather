@@ -58,6 +58,9 @@
     <string name="languageEnSetting">Tiếng Anh</string>
     <string name="languageViSetting">Tiếng Việt</string>
     <string name="notiSetting">Quản lý thông báo</string>
+    <string name="receiveWeatherNotifications">Nhận các thông báo về thời tiết</string>
+    <string name="receiveWeatherNotificationsDes">Thông báo thời tiết hàng ngày sẽ được phát 1 lần ban ngày, và 1 lần ban đêm</string>
+    <string name="notiTitle">Ngày mai ở</string>
     <string name="locationSetting">Truy cập vị trí</string>
     <string name="defaultLocationSetting">Vị trí mặc định</string>
     <string name="polycySetting">Chính sách quyền riêng tư</string>

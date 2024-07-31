@@ -52,7 +52,7 @@ public class NoResultsView extends LinearLayout {
         tvMessage.setText(context.getString(R.string.noResult));
         tvMessage.setTextSize(22);
         tvMessage.setTypeface(ResourcesCompat.getFont(context, R.font.roboto_medium));
-        tvMessage.setTextColor(Color.BLACK);
+        tvMessage.setTextColor(context.getResources().getColor(R.color.mainTextColor));
         LinearLayout.LayoutParams tvParams = new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT

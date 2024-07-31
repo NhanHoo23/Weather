@@ -70,7 +70,7 @@ public class LanguageActivity extends AppCompatActivity implements SettingAdapte
         AppManager.shared(this).setSelectedLanguageIndex(position);
         adapter.notifyDataSetChanged();
 
-        AppManager.setLocale(this, AppManager.shared(this).getSelectedLanguageIndex() == 0 ? "vi":"en");
+        AppManager.setLocale(this, position == 0 ? "vi":"en");
         Intent intent = new Intent("LANGUAGE_CHANGE");
         sendBroadcast(intent);
 
