@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">Weather</string>
+    <string name="retry">Try again</string>
+    <string name="networkError">Weather not available</string>
     <string name="noCityAddedYet">No city added yet</string>
     <string name="selectCurrentLocation">Select current location</string>
     <string name="SearchLocation">Search location</string>
-    <string name="highestTemp">H: </string> <!-- "C" in English could be "H" for High -->
-    <string name="lowestTemp">L: </string> <!-- "T" in English could be "L" for Low -->
+    <string name="highestTemp">H: </string>
+    <string name="lowestTemp">L: </string>
     <string name="hourlyForecast">HOURLY FORECAST</string>
     <string name="daylyForecast">DAILY FORECAST</string>
     <string name="today">Today</string>

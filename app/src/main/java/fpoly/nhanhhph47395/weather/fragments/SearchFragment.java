@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -22,6 +23,7 @@ import com.google.android.material.search.SearchView;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -47,7 +49,8 @@ public class SearchFragment extends Fragment implements SearchTextAdapter.Search
     private List<Location> searchList;
 
     private LocationAdapter.OnLocationSelectedListener listener;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private Handler handler;
+    private Runnable searchRunnable;
 
     private boolean isSelect = false;
 
@@ -82,18 +85,9 @@ public class SearchFragment extends Fragment implements SearchTextAdapter.Search
         View view = binding.getRoot();
 
         setupView();
-
-        setupSearchViewClearListener();
-
-        setupSearchObservable();
+        setupTextWatcher();
 
         return view;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        compositeDisposable.clear();
     }
 
     private void setupView() {
@@ -114,55 +108,8 @@ public class SearchFragment extends Fragment implements SearchTextAdapter.Search
         });
     }
 
-    private void setupSearchObservable() {
-        Observable<String> searchObservable = createSearchObservable();
-        compositeDisposable.add(
-                searchObservable
-                        .debounce(300, TimeUnit.MILLISECONDS) //chờ người dùng ngừng gõ 0.3s mới gọi lại
-                        .distinctUntilChanged() //chỉ phát ra khi chuỗi mới khác chuỗi cũ
-                        .filter(query -> !query.isEmpty())
-                        .switchMap(query -> Observable.create(emitter -> {
-                                    getActivity().runOnUiThread(() -> {
-                                        binding.progressBar.setVisibility(View.VISIBLE);
-                                        binding.noResultsView.setVisibility(View.GONE);
-                                    });
-                                    WeatherManager.shared().getSearchResults(query, new WeatherManager.SearchCallback() {
-
-                                        @Override
-                                        public void onSuccess(List<Location> locations) {
-                                            emitter.onNext(locations);
-                                            emitter.onComplete();
-                                        }
-
-                                        @Override
-                                        public void onFailure(Throwable throwable) {
-                                            emitter.onError(throwable);
-                                        }
-                                    });
-                                }
-                        ))
-                        .subscribeOn(Schedulers.io()) //Thực hiện các thao tác tìm kiếm trên luồng I/O, tránh chặn luồng chính.
-                        .observeOn(AndroidSchedulers.mainThread()) //Quan sát và cập nhật kết quả trên luồng chính để cập nhật UI.
-                        .subscribe(locations -> {
-                            binding.progressBar.setVisibility(View.GONE);
-                            searchList = (List<Location>) locations;
-                            if (searchList.isEmpty()) {
-                                binding.noResultsView.setVisibility(View.VISIBLE);
-                            } else {
-                                binding.noResultsView.setVisibility(View.GONE);
-                            }
-                            searchTextAdapter.updateData(searchList);
-                        }, throwable -> {
-                            binding.progressBar.setVisibility(View.GONE);
-                            binding.noResultsView.setVisibility(View.VISIBLE);
-                            Log.d("huhuhu", "error: " + throwable.getLocalizedMessage());
-                        })
-        );
-    }
-
     @Override
     public void onItemClick(int position) {
-        Toast.makeText(getContext(), "" + searchList.get(position).name, Toast.LENGTH_SHORT).show();
         LocationForecastFragment bottomSheet = LocationForecastFragment.newInstance(searchList.get(position), this);
         bottomSheet.show(((FragmentActivity) getContext()).getSupportFragmentManager(), bottomSheet.getTag());
     }
@@ -173,38 +120,55 @@ public class SearchFragment extends Fragment implements SearchTextAdapter.Search
         locationAdapter.updateData(WeatherManager.shared().getLocationList());
     }
 
-    private Observable<String> createSearchObservable() {
-        return Observable.create(emitter -> {
-            binding.searchView.getEditText().addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    Log.d("onTextChanged", "onTextChanged: " + s.toString());
-                    emitter.onNext(s.toString());
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {}
-            });
-        });
-    }
-
-    private void setupSearchViewClearListener() {
+    private void setupTextWatcher() {
+        handler = new Handler();
         binding.searchView.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (searchRunnable != null) {
+                    handler.removeCallbacks(searchRunnable); // Xóa Runnable cũ nếu có
+                }
+
                 if (s.length() == 0) {
                     searchTextAdapter.clearData();
+                    binding.noResultsView.setVisibility(View.GONE);
+                } else {
+                    searchRunnable = () -> performSearch(s.toString());
+                    handler.postDelayed(searchRunnable, 300);
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {}
+        });
+    }
+
+    private void performSearch(String query) {
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.noResultsView.setVisibility(View.GONE);
+
+        WeatherManager.shared().getSearchResults(query, new WeatherManager.SearchCallback() {
+            @Override
+            public void onSuccess(List<Location> locations) {
+                binding.progressBar.setVisibility(View.GONE);
+                searchList = locations;
+                if (searchList.isEmpty()) {
+                    binding.noResultsView.showNoResults();
+                } else {
+                    binding.noResultsView.setVisibility(View.GONE);
+                }
+                searchTextAdapter.updateData(searchList);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                binding.progressBar.setVisibility(View.GONE);
+                binding.noResultsView.showNetworkErrorWithoutButton();
+                Log.d("huhuhu", "error: " + throwable.getLocalizedMessage());
+            }
         });
     }
 

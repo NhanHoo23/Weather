@@ -74,12 +74,21 @@ public class HomeFragment extends Fragment {
         binding.dropdownMenu.setVisibility(View.VISIBLE);
         binding.tvLocation.setVisibility(View.GONE);
         binding.progressBar.setVisibility(View.VISIBLE);
+        binding.noNetworkView.showNetworkError();
         binding.nestedScrollView.setVisibility(View.GONE);
 
         popupMenu = new PopupMenu(getContext(), binding.dropdownMenu);
 
         binding.dropdownMenu.setOnClickListener(v1 -> {
             showPopupMenu(binding.dropdownMenu);
+        });
+
+        binding.noNetworkView.setRetryClickListener(v -> {
+            binding.noNetworkView.setVisibility(View.INVISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+
+            int defaultLocation = AppManager.shared(getContext()).getSelectedDefaultLocationIndex();
+            callAPI(defaultLocation);
         });
 
     }
@@ -89,7 +98,7 @@ public class HomeFragment extends Fragment {
 
         List<WeatherResponse> arr = WeatherManager.shared().getLocationList();
         for (int i = 0; i < arr.size(); i++) {
-            if(i == 0) {
+            if(i == 0 && AppManager.shared(getContext()).isLocationEnabled()) {
                 popupMenu.getMenu().add(0, i, i, getContext().getString(R.string.myLocation));
             } else {
                 popupMenu.getMenu().add(0, i, i, arr.get(i).location.name);
@@ -120,6 +129,7 @@ public class HomeFragment extends Fragment {
             public void onFailure(Throwable throwable) {
                 //In ra thông báo lỗi data hoặc ko có mạng
                 binding.progressBar.setVisibility(View.GONE);
+                binding.noNetworkView.setVisibility(View.VISIBLE);
                 Log.d("Huhuhu", "Không lấy được data. Lỗi: " + throwable.getLocalizedMessage());
             }
         });
@@ -129,6 +139,7 @@ public class HomeFragment extends Fragment {
         if (getContext() == null){return;}
 
         binding.progressBar.setVisibility(View.GONE);
+        binding.noNetworkView.setVisibility(View.INVISIBLE);
         binding.nestedScrollView.setVisibility(View.VISIBLE);
 
         binding.dropdownMenu.setText(weatherResponse.location.name + " ▼");

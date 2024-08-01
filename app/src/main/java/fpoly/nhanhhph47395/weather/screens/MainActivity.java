@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements LocationAdapter.O
         setContentView(binding.getRoot());
         AppManager.setLocale(this, AppManager.shared(this).getSelectedLanguageIndex() == 0 ? "vi" : "en");
 
-        if (AppManager.shared(this).isLocationEnabled()) {
+        if (!AppManager.shared(this).loadLocationList().isEmpty()) {
             replaceFragment(new HomeFragment());
         } else {
             replaceFragment(new NoLocationFragment());
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements LocationAdapter.O
 
         binding.nvView.setOnItemSelectedListener(menuItem -> {
             if (menuItem.getItemId() == R.id.nav_home && flag != R.id.nav_home) {
-                if (AppManager.shared(this).isLocationEnabled()) {
+                if (!AppManager.shared(this).loadLocationList().isEmpty()) {
                     replaceFragment(new HomeFragment());
                 } else {
                     replaceFragment(new NoLocationFragment());

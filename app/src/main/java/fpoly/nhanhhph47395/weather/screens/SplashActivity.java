@@ -74,6 +74,7 @@ public class SplashActivity extends AppCompatActivity {
                                     })
                                     .exceptionally(throwable -> {
                                         Log.e("Initialization Error", "Failed to fetch weather data", throwable);
+                                        goToMainActivity();
                                         return null;
                                     });
                         });
@@ -163,6 +164,7 @@ public class SplashActivity extends AppCompatActivity {
                                         goToMainActivity();
                                     })
                                     .exceptionally(throwable -> {
+                                        goToMainActivity();
                                         Log.e("Initialization Error", "Failed to fetch weather data", throwable);
                                         return null;
                                     });

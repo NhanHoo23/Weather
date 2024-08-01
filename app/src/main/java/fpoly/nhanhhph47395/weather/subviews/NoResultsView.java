@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,11 +17,9 @@ import androidx.core.content.res.ResourcesCompat;
 import fpoly.nhanhhph47395.weather.R;
 
 public class NoResultsView extends LinearLayout {
-    private TextView tvMessage, tvDescription, tvOptional;
+    private TextView tvMessage;
     private ImageView imgIcon;
-
-    private int icon;
-    private String message, description, optional;
+    private Button btnRetry;
 
     public NoResultsView(Context context) {
         super(context);
@@ -44,7 +43,7 @@ public class NoResultsView extends LinearLayout {
         imgIcon = new ImageView(context);
         imgIcon.setImageResource(R.drawable.ic_search);
         addView(imgIcon, new LayoutParams(
-                100,100
+                100, 100
         ));
 
         // Tạo TextView
@@ -60,39 +59,41 @@ public class NoResultsView extends LinearLayout {
         tvParams.topMargin = 20;
         addView(tvMessage, tvParams);
 
-//        tvDescription = new TextView(context);
-//        tvDescription.setText("Ứng dụng Thời tiết không được kết nối vào internet.");
-//        tvDescription.setTextSize(18);
-//        tvDescription.setTextColor(Color.BLACK);
-//        tvParams.topMargin = 20;
-//        addView(tvDescription, tvParams);
-//
-//        tvOptional = new TextView(context);
-//        tvOptional.setText("Đi tới cài đặt");
-//        tvOptional.setTextSize(18);
-//        tvOptional.setTextColor(Color.BLACK);
-//        tvParams.topMargin = 20;
-//        addView(tvOptional, tvParams);
+        // Tạo Button "Thử lại"
+        btnRetry = new Button(context);
+        btnRetry.setText(context.getString(R.string.retry));
+        LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT
+        );
+        btnParams.topMargin = 20;
+        addView(btnRetry, btnParams);
 
         setVisibility(GONE);
     }
 
-    public void setProperties(int icon, String message, Color messageColor, String description, Color descriptionColor, String optional, Color optionalColor) {
-        imgIcon.setImageResource(icon);
-        tvMessage.setText(message);
+    public void setRetryClickListener(OnClickListener listener) {
+        btnRetry.setOnClickListener(listener);
+    }
 
-        if (description == null) {
-            tvDescription.setVisibility(GONE);
-        } else {
-            tvDescription.setVisibility(VISIBLE);
-            tvDescription.setText(description);
-        }
+    public void showNoResults() {
+        imgIcon.setImageResource(R.drawable.ic_search);
+        tvMessage.setText(getContext().getString(R.string.noResult));
+        btnRetry.setVisibility(GONE);
+        setVisibility(VISIBLE);
+    }
 
-        if (optional == null) {
-            tvOptional.setVisibility(GONE);
-        } else {
-            tvOptional.setVisibility(VISIBLE);
-            tvOptional.setText(optional);
-        }
+    public void showNetworkError() {
+        imgIcon.setImageResource(R.drawable.ic_network_error);
+        tvMessage.setText(getContext().getString(R.string.networkError));
+        btnRetry.setVisibility(VISIBLE);
+        setVisibility(VISIBLE);
+    }
+
+    public void showNetworkErrorWithoutButton() {
+        imgIcon.setImageResource(R.drawable.ic_network_error);
+        tvMessage.setText(getContext().getString(R.string.networkError));
+        btnRetry.setVisibility(GONE);
+        setVisibility(VISIBLE);
     }
 }
