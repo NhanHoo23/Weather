@@ -75,6 +75,7 @@ public class HomeFragment extends Fragment {
         binding.tvLocation.setVisibility(View.GONE);
         binding.progressBar.setVisibility(View.VISIBLE);
         binding.noNetworkView.showNetworkError();
+        binding.noNetworkView.setVisibility(View.GONE);
         binding.nestedScrollView.setVisibility(View.GONE);
 
         popupMenu = new PopupMenu(getContext(), binding.dropdownMenu);

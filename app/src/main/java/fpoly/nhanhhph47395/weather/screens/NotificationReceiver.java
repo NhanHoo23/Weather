@@ -1,4 +1,4 @@
-package fpoly.nhanhhph47395.weather.utils;
+package fpoly.nhanhhph47395.weather.screens;
 
 import android.Manifest;
 import android.app.Notification;
@@ -23,6 +23,7 @@ import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.models.WeatherResponse;
 import fpoly.nhanhhph47395.weather.screens.MainActivity;
 import fpoly.nhanhhph47395.weather.screens.SplashActivity;
+import fpoly.nhanhhph47395.weather.utils.AppManager;
 
 public class NotificationReceiver extends BroadcastReceiver {
     @Override

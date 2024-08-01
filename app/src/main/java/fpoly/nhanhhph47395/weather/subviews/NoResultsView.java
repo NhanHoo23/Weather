@@ -78,6 +78,7 @@ public class NoResultsView extends LinearLayout {
 
     public void showNoResults() {
         imgIcon.setImageResource(R.drawable.ic_search);
+
         tvMessage.setText(getContext().getString(R.string.noResult));
         btnRetry.setVisibility(GONE);
         setVisibility(VISIBLE);

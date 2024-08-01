@@ -62,6 +62,7 @@ public class SplashActivity extends AppCompatActivity {
             if (AppManager.shared(this).isFirstLogin()) {
                 showNotificationPrompt();
             } else {
+                checkLocationPermission();
                 getLastKnownLocation()
                         .addOnCompleteListener(task -> {
                             if (!task.isSuccessful()) {
@@ -130,6 +131,15 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             AppManager.shared(this).setNotificationEnabled(false);
             showNotificationPrompt();
+        }
+    }
+
+    private void checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            AppManager.shared(this).setLocationEnabled(true);
+        } else {
+            AppManager.shared(this).setLocationEnabled(false);
         }
     }
 

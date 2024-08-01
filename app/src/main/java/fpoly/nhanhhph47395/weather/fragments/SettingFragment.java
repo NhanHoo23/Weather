@@ -10,6 +10,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -50,7 +52,10 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
     private FragmentSettingBinding binding;
     private SettingAdapter adapter;
     private List<SettingModel> list;
+
     private BroadcastReceiver languageChangeReceiver;
+    private ActivityResultLauncher<Intent> settingsLauncher;
+
 
     public SettingFragment() {
         // Required empty public constructor
@@ -116,7 +121,7 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
         list.add(new SettingModel(getString(R.string.darkModeSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, false));
         list.add(new SettingModel(getString(R.string.languageSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
         list.add(new SettingModel(getString(R.string.notiSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
-//        list.add(new SettingModel(getString(R.string.locationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.locationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
         list.add(new SettingModel(getString(R.string.defaultLocationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
         list.add(new SettingModel(getString(R.string.polycySetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
 
@@ -124,6 +129,28 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
         binding.rcSetting.setLayoutManager(linearLayoutManager);
         adapter = new SettingAdapter(getContext(), list, this, this);
         binding.rcSetting.setAdapter(adapter);
+
+        settingsLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    // Xử lý kết quả trả về từ màn hình cài đặt.
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // Kiểm tra quyền vị trí
+                        checkLocationPermission();
+                    }
+                }
+        );
+    }
+
+    private void checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            // Quyền vị trí đã được cấp
+            Toast.makeText(requireContext(), "Location permission granted", Toast.LENGTH_SHORT).show();
+        } else {
+            // Quyền vị trí chưa được cấp
+            Toast.makeText(requireContext(), "Location permission not granted", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void goToActivity(Class<? extends Activity> activityClass) {
@@ -144,17 +171,26 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
             case 3://Quản lý thông báo
                 goToActivity(NotiManagementActivity.class);
                 break;
-//            case 4://requestLocationPermission
-//                requestLocationPermission();
-//                break;
-            case 4://Vị trí mặc định
+            case 4://requestLocationPermission
+                openAppSettings();
+                break;
+            case 5://Vị trí mặc định
                 goToActivity(DefaultLocationActivity.class);
                 break;
-            case 5:
+            case 6:
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.weatherapi.com/privacy.aspx"));
                 startActivity(browserIntent);
                 break;
         }
+    }
+
+    public void openAppSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getContext().getPackageName(), null);
+        intent.setData(uri);
+        startActivity(intent);
+        AppManager.shared(getContext()).selectedFragment = 0;
+        System.exit(0);
     }
 
     private void updateLanguage() {
@@ -165,7 +201,7 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
         list.add(new SettingModel(getString(R.string.darkModeSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, false));
         list.add(new SettingModel(getString(R.string.languageSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
         list.add(new SettingModel(getString(R.string.notiSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
-//        list.add(new SettingModel(getString(R.string.locationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
+        list.add(new SettingModel(getString(R.string.locationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
         list.add(new SettingModel(getString(R.string.defaultLocationSetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
         list.add(new SettingModel(getString(R.string.polycySetting), isDarkMode ? R.drawable.ic_arrow_dark : R.drawable.ic_arrow, true));
 
@@ -173,12 +209,6 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
         binding.rcSetting.setLayoutManager(linearLayoutManager);
         adapter = new SettingAdapter(getContext(), list, this, this);
         binding.rcSetting.setAdapter(adapter);
-    }
-
-    private void requestLocationPermission() {
-        ActivityCompat.requestPermissions(getActivity(),
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                AppManager.shared(getContext()).REQUEST_LOCATION_PERMISSION);
     }
 
     @Override

@@ -17,7 +17,6 @@ import java.util.Calendar;
 import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.databinding.ActivityNotiManagementBinding;
 import fpoly.nhanhhph47395.weather.utils.AppManager;
-import fpoly.nhanhhph47395.weather.utils.NotificationReceiver;
 
 public class NotiManagementActivity extends AppCompatActivity {
     ActivityNotiManagementBinding binding;
