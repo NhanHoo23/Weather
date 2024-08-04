@@ -129,30 +129,7 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
         binding.rcSetting.setLayoutManager(linearLayoutManager);
         adapter = new SettingAdapter(getContext(), list, this, this);
         binding.rcSetting.setAdapter(adapter);
-
-        settingsLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    // Xử lý kết quả trả về từ màn hình cài đặt.
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        // Kiểm tra quyền vị trí
-                        checkLocationPermission();
-                    }
-                }
-        );
     }
-
-    private void checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            // Quyền vị trí đã được cấp
-            Toast.makeText(requireContext(), "Location permission granted", Toast.LENGTH_SHORT).show();
-        } else {
-            // Quyền vị trí chưa được cấp
-            Toast.makeText(requireContext(), "Location permission not granted", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private void goToActivity(Class<? extends Activity> activityClass) {
         Intent intent = new Intent(getActivity(), activityClass);
         startActivity(intent);

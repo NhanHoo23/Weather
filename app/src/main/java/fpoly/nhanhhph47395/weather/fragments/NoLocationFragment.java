@@ -129,21 +129,26 @@ public class NoLocationFragment extends Fragment {
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null) {
-                            AppManager.shared(getContext()).setDefaultLongitude((float) location.getLongitude());
-                            AppManager.shared(getContext()).setDefaultLatitude((float) location.getLatitude());
-
                             List<String> locationList = AppManager.shared(getContext()).loadLocationList();
                             String latAndLong = location.getLatitude()+","+location.getLongitude();
-                            if (locationList.isEmpty()) {
-                                locationList.add(latAndLong);
+
+                            if (AppManager.shared(getContext()).isFirstLogin()) {
+                                if (locationList.isEmpty()) {
+                                    locationList.add(latAndLong);
+                                }
                             } else {
-                                if (AppManager.shared(getContext()).isLocationEnabled()) {
-                                    locationList.set(0, latAndLong);
+                                if (locationList.isEmpty()) {
+                                    locationList.add(latAndLong);
                                 } else {
-                                    locationList.add(0, latAndLong);
+                                    if (AppManager.shared(getContext()).hasLatAndLong()) {
+                                        locationList.set(0, latAndLong);
+                                    } else {
+                                        locationList.add(0, latAndLong);
+                                    }
                                 }
                             }
                             AppManager.shared(getContext()).saveLocationList(locationList);
+                            AppManager.shared(getContext()).setHasLatAndLong(true);
 
                             taskCompletionSource.setResult(null);
                         } else {

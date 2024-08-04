@@ -110,26 +110,6 @@ public class AppManager {
         return new int[]{hour, minute};
     }
 
-    public void setDefaultLongitude(float longitude) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putFloat("defaultLongitude", longitude);
-        editor.apply();
-    }
-
-    public float defaultLongitude() {
-        return sharedPreferences.getFloat("defaultLongitude", 0);
-    }
-
-    public void setDefaultLatitude(float latitude) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putFloat("defaultLatitude", latitude);
-        editor.apply();
-    }
-
-    public float defaultLatitude() {
-        return sharedPreferences.getFloat("defaultLatitude", 0);
-    }
-
     public void saveLocationList(List<String> locationList) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("locationList", new Gson().toJson(locationList));

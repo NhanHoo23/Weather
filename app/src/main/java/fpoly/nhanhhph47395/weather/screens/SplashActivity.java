@@ -136,6 +136,8 @@ public class SplashActivity extends AppCompatActivity {
                     .show();
         } else {
             AppManager.shared(this).setNotificationEnabled(true);
+            AppManager.shared(this).saveTime(6, 0, "dayTime");
+            AppManager.shared(this).saveTime(18, 0, "nightTime");
             requestLocationPermission();
         }
     }
