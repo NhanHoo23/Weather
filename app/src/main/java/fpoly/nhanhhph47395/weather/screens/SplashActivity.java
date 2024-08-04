@@ -42,6 +42,7 @@ public class SplashActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash);
 
+        //set language
         if (AppManager.shared(this).isFirstLogin()) {
             AppManager.shared(this).setDarkModeStatusBasedOnDevice(this);
 
@@ -53,9 +54,12 @@ public class SplashActivity extends AppCompatActivity {
                 AppManager.shared(this).setSelectedLanguageIndex(1);
             }
         }
+
+        //set darkmode
         AppManager.applyTheme(AppManager.shared(this).getDarkModeStatus());
 
 
+        //get location
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         new Handler().postDelayed(() -> {
@@ -63,22 +67,35 @@ public class SplashActivity extends AppCompatActivity {
                 showNotificationPrompt();
             } else {
                 checkLocationPermission();
-                getLastKnownLocation()
-                        .addOnCompleteListener(task -> {
-                            if (!task.isSuccessful()) {
-                                Log.e("Initialization Error", "Failed to get last known location", task.getException());
-                            }
+                if (AppManager.shared(SplashActivity.this).isLocationEnabled()) {
+                    getLastKnownLocation()
+                            .addOnCompleteListener(task -> {
+                                if (!task.isSuccessful()) {
+                                    Log.e("Initialization Error", "Failed to get last known location", task.getException());
+                                }
 
-                            WeatherManager.shared().fetchAndStoreWeatherData(this)
-                                    .thenAccept(aVoid -> {
-                                        goToMainActivity();
-                                    })
-                                    .exceptionally(throwable -> {
-                                        Log.e("Initialization Error", "Failed to fetch weather data", throwable);
-                                        goToMainActivity();
-                                        return null;
-                                    });
-                        });
+                                WeatherManager.shared().fetchAndStoreWeatherData(this)
+                                        .thenAccept(aVoid -> {
+                                            goToMainActivity();
+                                        })
+                                        .exceptionally(throwable -> {
+                                            Log.e("Initialization Error", "Failed to fetch weather data", throwable);
+                                            goToMainActivity();
+                                            return null;
+                                        });
+                            });
+                } else {
+                    WeatherManager.shared().fetchAndStoreWeatherData(this)
+                            .thenAccept(aVoid -> {
+                                goToMainActivity();
+                            })
+                            .exceptionally(throwable -> {
+                                Log.e("Initialization Error", "Failed to fetch weather data", throwable);
+                                goToMainActivity();
+                                return null;
+                            });
+                }
+
             }
         }, 3000);
     }
@@ -162,6 +179,7 @@ public class SplashActivity extends AppCompatActivity {
 
         if (requestCode == AppManager.shared(this).REQUEST_LOCATION_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                AppManager.shared(this).setLocationEnabled(true);
                 getLastKnownLocation()
                         .addOnCompleteListener(task -> {
                             if (!task.isSuccessful()) {
@@ -170,7 +188,6 @@ public class SplashActivity extends AppCompatActivity {
 
                             WeatherManager.shared().fetchAndStoreWeatherData(this)
                                     .thenAccept(aVoid -> {
-                                        AppManager.shared(this).setLocationEnabled(true);
                                         goToMainActivity();
                                     })
                                     .exceptionally(throwable -> {
@@ -205,21 +222,26 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null) {
-                            AppManager.shared(SplashActivity.this).setDefaultLongitude((float) location.getLongitude());
-                            AppManager.shared(SplashActivity.this).setDefaultLatitude((float) location.getLatitude());
-
                             List<String> locationList = AppManager.shared(SplashActivity.this).loadLocationList();
                             String latAndLong = location.getLatitude()+","+location.getLongitude();
-                            if (locationList.isEmpty()) {
-                                locationList.add(latAndLong);
+
+                            if (AppManager.shared(SplashActivity.this).isFirstLogin()) {
+                                if (locationList.isEmpty()) {
+                                    locationList.add(latAndLong);
+                                }
                             } else {
-                                if (AppManager.shared(SplashActivity.this).isLocationEnabled()) {
-                                    locationList.set(0, latAndLong);
+                                if (locationList.isEmpty()) {
+                                    locationList.add(latAndLong);
                                 } else {
-                                    locationList.add(0, latAndLong);
+                                    if (AppManager.shared(SplashActivity.this).hasLatAndLong()) {
+                                        locationList.set(0, latAndLong);
+                                    } else {
+                                        locationList.add(0, latAndLong);
+                                    }
                                 }
                             }
                             AppManager.shared(SplashActivity.this).saveLocationList(locationList);
+                            AppManager.shared(SplashActivity.this).setHasLatAndLong(true);
 
                             taskCompletionSource.setResult(null);
                         } else {

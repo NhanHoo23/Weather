@@ -31,13 +31,13 @@ import java.util.List;
 import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.databinding.FragmentHomeBinding;
 import fpoly.nhanhhph47395.weather.databinding.FragmentNoLocationBinding;
+import fpoly.nhanhhph47395.weather.screens.MainActivity;
 import fpoly.nhanhhph47395.weather.screens.SplashActivity;
 import fpoly.nhanhhph47395.weather.utils.AppManager;
 import fpoly.nhanhhph47395.weather.utils.WeatherManager;
 
 public class NoLocationFragment extends Fragment {
     private FragmentNoLocationBinding binding;
-//    private ExtendedFloatingActionButton btnCurrentLocation, btnSearchLocation;
     private FusedLocationProviderClient fusedLocationClient;
 
     public NoLocationFragment() {}
@@ -64,6 +64,7 @@ public class NoLocationFragment extends Fragment {
         });
 
         binding.btnSearchLocation.setOnClickListener(v -> {
+            ((MainActivity) getActivity()).switchToSearchFragment();
             replaceFragment(new SearchFragment());
         });
 

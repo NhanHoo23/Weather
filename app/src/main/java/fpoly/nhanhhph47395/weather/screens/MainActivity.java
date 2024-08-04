@@ -81,6 +81,10 @@ public class MainActivity extends AppCompatActivity implements LocationAdapter.O
         transaction.commit();
     }
 
+    public void switchToSearchFragment() {
+        binding.nvView.setSelectedItemId(R.id.nav_search);
+    }
+
     //Listener của LocationRecycleView bên SearchFragment
     @Override
     public void onLocationSelected(int position) {

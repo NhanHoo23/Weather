@@ -23,12 +23,14 @@ public class WeatherManager {
     private WeatherAPIService apiService;
     private static final String API_KEY = "5d1ae5737ac1422c90b10706242907";
     public List<WeatherResponse> locationList;
+    public List<WeatherResponse> locationListRefresh;
 
 
     public WeatherManager() {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         apiService = retrofit.create(WeatherAPIService.class);
         locationList = new ArrayList<>();
+        locationListRefresh = new ArrayList<>();
     }
 
     public static synchronized WeatherManager shared() {
@@ -94,6 +96,39 @@ public class WeatherManager {
                     public void onSuccess(WeatherResponse weatherResponse) {
                         synchronized (locationList) {
                             locationList.add(weatherResponse);
+                            if (index == 0) {AppManager.shared(context).saveWeatherResponse(weatherResponse);}
+                        }
+                        apiCallFuture.complete(null);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        Log.d("onFailure", "onFailure: " + locationListString.get(index) + "-" + throwable.getLocalizedMessage());
+                        apiCallFuture.completeExceptionally(throwable);
+                    }
+                });
+                return apiCallFuture;
+            });
+        }
+
+        return future;
+    }
+
+    public CompletableFuture<Void> refreshWeatherData(Context context) {
+        List<String> locationListString = AppManager.shared(context).loadLocationList();
+        CompletableFuture<Void> future = CompletableFuture.completedFuture(null);
+        locationListRefresh.clear();
+
+        for (int i = 0; i < locationListString.size(); i++) {
+            final int index = i;
+            future = future.thenCompose(v -> { //thenCompose tạo chuỗi các tác vụ
+                CompletableFuture<Void> apiCallFuture = new CompletableFuture<>();
+                boolean isEn = AppManager.shared(context).getSelectedLanguageIndex() == 1;
+                getWeatherBySpecificLocation(locationListString.get(index), 10, isEn ? "en":"vi", new WeatherCallback() {
+                    @Override
+                    public void onSuccess(WeatherResponse weatherResponse) {
+                        synchronized (locationListRefresh) {
+                            locationListRefresh.add(weatherResponse);
                             if (index == 0) {AppManager.shared(context).saveWeatherResponse(weatherResponse);}
                         }
                         apiCallFuture.complete(null);

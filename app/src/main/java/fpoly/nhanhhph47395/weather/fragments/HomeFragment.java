@@ -8,6 +8,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.ContextMenu;
@@ -48,6 +49,8 @@ public class HomeFragment extends Fragment {
     private List<Forecast.ForecastDay.Hour> hoursList;
     private List<Forecast.ForecastDay> daysList;
 
+    private int popupMenuIndex = 0;
+
     public HomeFragment() {}
 
     @Override
@@ -60,10 +63,13 @@ public class HomeFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             int locationIndex = args.getInt("locationIndex");
+            popupMenuIndex = locationIndex;
 
-            callAPI(locationIndex);
+            callAPI(popupMenuIndex);
         } else {
             int defaultLocation = AppManager.shared(getContext()).getSelectedDefaultLocationIndex();
+            popupMenuIndex = defaultLocation;
+
             callAPI(defaultLocation);
         }
 
@@ -92,6 +98,12 @@ public class HomeFragment extends Fragment {
             callAPI(defaultLocation);
         });
 
+        binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                callAPI(popupMenuIndex);
+            }
+        });
     }
 
     private void showPopupMenu(View view) {
@@ -108,7 +120,8 @@ public class HomeFragment extends Fragment {
 
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             int index = menuItem.getItemId();
-            callAPI(index);
+            popupMenuIndex = index;
+            callAPI(popupMenuIndex);
 
             return true;
         });
@@ -131,6 +144,7 @@ public class HomeFragment extends Fragment {
                 //In ra thông báo lỗi data hoặc ko có mạng
                 binding.progressBar.setVisibility(View.GONE);
                 binding.noNetworkView.setVisibility(View.VISIBLE);
+                binding.swipeRefreshLayout.setRefreshing(false);
                 Log.d("Huhuhu", "Không lấy được data. Lỗi: " + throwable.getLocalizedMessage());
             }
         });
@@ -139,6 +153,7 @@ public class HomeFragment extends Fragment {
     private void updateUI(WeatherResponse weatherResponse) {
         if (getContext() == null){return;}
 
+        binding.swipeRefreshLayout.setRefreshing(false);
         binding.progressBar.setVisibility(View.GONE);
         binding.noNetworkView.setVisibility(View.INVISIBLE);
         binding.nestedScrollView.setVisibility(View.VISIBLE);

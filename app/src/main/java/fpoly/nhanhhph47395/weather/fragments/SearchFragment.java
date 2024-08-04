@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
 import android.text.Editable;
@@ -106,6 +107,26 @@ public class SearchFragment extends Fragment implements SearchTextAdapter.Search
             binding.tvSelect.setText(isSelect ? "Xong" : "Chọn");
             locationAdapter.toggleDeleteButton();
         });
+
+        binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshLocationList();
+            }
+        });
+    }
+
+    private void refreshLocationList() {
+        WeatherManager.shared().refreshWeatherData(getContext())
+                .thenAccept(aVoid -> {
+                    locationAdapter.updateData(WeatherManager.shared().locationListRefresh);
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                })
+                .exceptionally(throwable -> {
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                    Log.e("Initialization Error", "Failed to fetch weather data", throwable);
+                    return null;
+                });
     }
 
     @Override

@@ -77,6 +77,16 @@ public class AppManager {
         return sharedPreferences.getBoolean("locationEnabled", false);
     }
 
+    public void setHasLatAndLong(boolean bool) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("hasLatAndLong", bool);
+        editor.apply();
+    }
+
+    public boolean hasLatAndLong() {
+        return sharedPreferences.getBoolean("hasLatAndLong", false);
+    }
+
     public void setNotificationEnabled(boolean enabled) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("notificationEnabled", enabled);
