@@ -1,6 +1,9 @@
 package fpoly.nhanhhph47395.weather.screens;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -25,6 +28,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -138,6 +142,7 @@ public class SplashActivity extends AppCompatActivity {
             AppManager.shared(this).setNotificationEnabled(true);
             AppManager.shared(this).saveTime(6, 0, "dayTime");
             AppManager.shared(this).saveTime(18, 0, "nightTime");
+            setupNoti(6, 0, 18, 0);
             requestLocationPermission();
         }
     }
@@ -254,5 +259,31 @@ public class SplashActivity extends AppCompatActivity {
         return taskCompletionSource.getTask();
     }
 
+    private void setDailyNotification(int hourOfDay, int minute, int requestCode) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        intent.putExtra("notification_id", requestCode);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_MUTABLE); // hoặc PendingIntent.FLAG_IMMUTABLE
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+
+        if (calendar.before(Calendar.getInstance())) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pendingIntent);
+    }
+
+    private void setupNoti(int dayHour, int dayMinute, int nightHour, int nightMinute) {
+        AppManager.shared(this).saveTime(dayHour, dayMinute, "dayTime");
+        setDailyNotification(dayHour, dayMinute, 0);
+
+        AppManager.shared(this).saveTime(nightHour, nightMinute, "nightTime");
+        setDailyNotification(nightHour, nightMinute, 1);
+    }
 }

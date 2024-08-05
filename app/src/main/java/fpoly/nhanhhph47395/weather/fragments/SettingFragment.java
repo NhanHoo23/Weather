@@ -190,7 +190,6 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
 
     @Override
     public void onClick(boolean isDarkMode) {
-        Toast.makeText(getContext(), "isDarkMode: " + isDarkMode, Toast.LENGTH_SHORT).show();
         AppManager.shared(getContext()).setDarkModeStatus(isDarkMode);
         AppManager.applyTheme(isDarkMode);
     }

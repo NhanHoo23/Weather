@@ -23,6 +23,7 @@ public class NotiManagementActivity extends AppCompatActivity {
     ActivityNotiManagementBinding binding;
     private boolean isEnable = false;
     private boolean gotoSetting = false;
+    private PendingIntent pendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class NotiManagementActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (gotoSetting = true) {
+        if (gotoSetting) {
             checkNotificationStatus();
         }
     }
@@ -78,7 +79,6 @@ public class NotiManagementActivity extends AppCompatActivity {
             if (notificationManager.areNotificationsEnabled()) {
                 isEnable = !isEnable;
                 AppManager.shared(this).setNotificationEnabled(isEnable);
-                Toast.makeText(this, "" + isEnable, Toast.LENGTH_SHORT).show();
 
                 if (isEnable) {
                     int dayHour = binding.timePickerDay.getHour();
@@ -87,6 +87,8 @@ public class NotiManagementActivity extends AppCompatActivity {
                     int nightMinute = binding.timePickerNight.getMinute();
 
                     setupNoti(dayHour, dayMinute, nightHour, nightMinute);
+                } else {
+                    cancelNoti();
                 }
             } else {
                 gotoSetting = true;
@@ -139,7 +141,7 @@ public class NotiManagementActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, NotificationReceiver.class);
         intent.putExtra("notification_id", requestCode);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_MUTABLE); // hoặc PendingIntent.FLAG_IMMUTABLE
+        pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_MUTABLE);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -161,5 +163,14 @@ public class NotiManagementActivity extends AppCompatActivity {
 
         AppManager.shared(this).saveTime(nightHour, nightMinute, "nightTime");
         setDailyNotification(nightHour, nightMinute, 1);
+    }
+
+    private void cancelNoti() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        if (pendingIntent != null) {
+            alarmManager.cancel(pendingIntent);
+            pendingIntent.cancel();
+        }
     }
 }

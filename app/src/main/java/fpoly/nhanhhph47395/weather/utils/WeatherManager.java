@@ -25,7 +25,6 @@ public class WeatherManager {
     public List<WeatherResponse> locationList;
     public List<WeatherResponse> locationListRefresh;
 
-
     public WeatherManager() {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         apiService = retrofit.create(WeatherAPIService.class);

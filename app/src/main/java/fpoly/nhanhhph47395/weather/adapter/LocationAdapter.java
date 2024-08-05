@@ -149,8 +149,6 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         notifyDataSetChanged();
     }
 
-
-
     public interface OnLocationSelectedListener {
         void onLocationSelected(int position);
     }
