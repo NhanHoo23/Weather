@@ -40,6 +40,7 @@ import fpoly.nhanhhph47395.weather.models.settingModels.SettingModel;
 import fpoly.nhanhhph47395.weather.screens.DefaultLocationActivity;
 import fpoly.nhanhhph47395.weather.screens.LanguageActivity;
 import fpoly.nhanhhph47395.weather.screens.NotiManagementActivity;
+import fpoly.nhanhhph47395.weather.screens.SplashActivity;
 import fpoly.nhanhhph47395.weather.screens.unitSetting.UnitSettingActivity;
 import fpoly.nhanhhph47395.weather.utils.AppManager;
 
@@ -100,17 +101,13 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == AppManager.shared(getContext()).REQUEST_LOCATION_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                AppManager.shared(getContext()).setLocationEnabled(true);
-                adapter.notifyDataSetChanged();
-            } else {
-                AppManager.shared(getContext()).setLocationEnabled(false);
-                adapter.notifyDataSetChanged();
-            }
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 111) {
+            // Khởi động lại ứng dụng sau khi người dùng quay lại từ cài đặt
+            Intent splashIntent = new Intent(getActivity(), SplashActivity.class);
+            splashIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(splashIntent);
         }
     }
 
@@ -165,9 +162,8 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", getContext().getPackageName(), null);
         intent.setData(uri);
-        startActivity(intent);
+        startActivityForResult(intent, 111);
         AppManager.shared(getContext()).selectedFragment = 0;
-        System.exit(0);
     }
 
     private void updateLanguage() {
