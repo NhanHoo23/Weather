@@ -205,7 +205,15 @@ public class SplashActivity extends AppCompatActivity {
                         });
             } else {
                 AppManager.shared(this).setLocationEnabled(false);
-                goToMainActivity();
+                WeatherManager.shared().fetchAndStoreWeatherData(this)
+                        .thenAccept(aVoid -> {
+                            goToMainActivity();
+                        })
+                        .exceptionally(throwable -> {
+                            Log.e("Initialization Error", "Failed to fetch weather data", throwable);
+                            goToMainActivity();
+                            return null;
+                        });
             }
 
         }
