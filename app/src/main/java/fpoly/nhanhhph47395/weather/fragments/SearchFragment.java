@@ -37,10 +37,6 @@ import fpoly.nhanhhph47395.weather.models.WeatherResponse;
 import fpoly.nhanhhph47395.weather.subviews.NoResultsView;
 import fpoly.nhanhhph47395.weather.utils.AppManager;
 import fpoly.nhanhhph47395.weather.utils.WeatherManager;
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class SearchFragment extends Fragment implements SearchTextAdapter.SearchTextAdapterClickListener, LocationForecastFragment.LocationForecastFragmentListener {
     private FragmentSearchBinding binding;

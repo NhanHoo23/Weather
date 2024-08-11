@@ -164,8 +164,10 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", getContext().getPackageName(), null);
         intent.setData(uri);
-        startActivityForResult(intent, 111);
+        startActivity(intent);
+//        startActivityForResult(intent, 111);
         AppManager.shared(getContext()).selectedFragment = 0;
+        System.exit(0);
     }
 
     private void updateLanguage() {
