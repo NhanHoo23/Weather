@@ -28,6 +28,7 @@ import fpoly.nhanhhph47395.weather.R;
 import fpoly.nhanhhph47395.weather.adapter.DayForecastAdapter;
 import fpoly.nhanhhph47395.weather.adapter.HourForecastAdapter;
 import fpoly.nhanhhph47395.weather.databinding.FragmentHomeBinding;
+import fpoly.nhanhhph47395.weather.databinding.FragmentLocationForecastBinding;
 import fpoly.nhanhhph47395.weather.models.Forecast;
 import fpoly.nhanhhph47395.weather.models.Location;
 import fpoly.nhanhhph47395.weather.models.WeatherEvaluate;
@@ -37,7 +38,7 @@ import fpoly.nhanhhph47395.weather.utils.AppManager;
 import fpoly.nhanhhph47395.weather.utils.WeatherManager;
 
 public class LocationForecastFragment extends BottomSheetDialogFragment {
-    private FragmentHomeBinding binding;
+    private FragmentLocationForecastBinding binding;
     private Location selectedLocation;
     private HourForecastAdapter hourForecastAdapter;
     private DayForecastAdapter dayForecastAdapter;
@@ -62,7 +63,7 @@ public class LocationForecastFragment extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = FragmentLocationForecastBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
         setupView(view);
