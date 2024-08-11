@@ -43,6 +43,7 @@ import fpoly.nhanhhph47395.weather.screens.NotiManagementActivity;
 import fpoly.nhanhhph47395.weather.screens.SplashActivity;
 import fpoly.nhanhhph47395.weather.screens.unitSetting.UnitSettingActivity;
 import fpoly.nhanhhph47395.weather.utils.AppManager;
+import fpoly.nhanhhph47395.weather.utils.WeatherManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -100,16 +101,17 @@ public class SettingFragment extends Fragment implements SettingAdapter.OnClickL
         requireActivity().unregisterReceiver(languageChangeReceiver);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 111) {
-            // Khởi động lại ứng dụng sau khi người dùng quay lại từ cài đặt
-            Intent splashIntent = new Intent(getActivity(), SplashActivity.class);
-            splashIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(splashIntent);
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 111) {
+//            WeatherManager.shared().locationList.clear();
+//            // Khởi động lại ứng dụng sau khi người dùng quay lại từ cài đặt
+//            Intent splashIntent = new Intent(getActivity(), SplashActivity.class);
+//            splashIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(splashIntent);
+//        }
+//    }
 
     private void setupView() {
         boolean isDarkMode = AppManager.shared(getContext()).getDarkModeStatus();
