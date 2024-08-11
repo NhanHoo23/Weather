@@ -38,6 +38,7 @@
     <string name="feelLike">FEELS LIKE</string>
     <string name="feelLikeDes">Humidity is making it feel warmer</string>
     <string name="select">Select</string>
+    <string name="done">Done</string>
     <string name="search">Search</string>
     <string name="searchPlaceholder">Search city</string>
     <string name="noResult">No result</string>

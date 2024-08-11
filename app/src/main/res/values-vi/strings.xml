@@ -38,6 +38,7 @@
     <string name="feelLike">CẢM NHẬN</string>
     <string name="feelLikeDes">Độ ẩm đang khiến bạn thấy ấm hơn</string>
     <string name="select">Chọn</string>
+    <string name="done">Xong</string>
     <string name="search">Tìm kiếm</string>
     <string name="searchPlaceholder">Tìm kiếm thành phố</string>
     <string name="noResult">Không có kết quả</string>

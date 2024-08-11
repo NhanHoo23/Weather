@@ -100,7 +100,7 @@ public class SearchFragment extends Fragment implements SearchTextAdapter.Search
 
         binding.tvSelect.setOnClickListener(v -> {
             isSelect = !isSelect;
-            binding.tvSelect.setText(isSelect ? "Xong" : "Chọn");
+            binding.tvSelect.setText(isSelect ? getContext().getString(R.string.done) : getContext().getString(R.string.select));
             locationAdapter.toggleDeleteButton();
         });
 
@@ -191,7 +191,7 @@ public class SearchFragment extends Fragment implements SearchTextAdapter.Search
 
     public void deleteItem(int position) {
         isSelect = false;
-        binding.tvSelect.setText("Chọn");
+        binding.tvSelect.setText(getContext().getString(R.string.select));
         List<String> listLocationString = AppManager.shared(getContext()).loadLocationList();
         listLocationString.remove(position);
         AppManager.shared(getContext()).saveLocationList(listLocationString);
